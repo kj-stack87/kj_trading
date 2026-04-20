@@ -1,9 +1,70 @@
 {
   "dates": [
+    "2026-04-21",
     "2026-04-20"
   ],
   "rounds": [],
   "rows": [
+    {
+      "kstDate": "2026-04-21",
+      "symbolName": "AXS 1.25X NVDA Bear Daily ETF",
+      "fill": {
+        "symbol": "NVDS",
+        "side": "buy",
+        "quantity": 13,
+        "price": 169.45,
+        "reason": "portfolio entry",
+        "cashAfter": 1605.19,
+        "positionAfter": 13,
+        "realizedPnlToday": 171.39,
+        "filledAt": "2026-04-20T17:35:22.971Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-21",
+      "symbolName": "삼성 인버스 2X 코스닥150 선물 ETN",
+      "fill": {
+        "symbol": "530107",
+        "side": "buy",
+        "quantity": 11,
+        "price": 190.13,
+        "reason": "portfolio entry",
+        "cashAfter": 3808.04,
+        "positionAfter": 11,
+        "realizedPnlToday": 171.39,
+        "filledAt": "2026-04-20T17:35:22.971Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-21",
+      "symbolName": "ProShares Ultra Semiconductors 2X",
+      "fill": {
+        "symbol": "USD",
+        "side": "sell",
+        "quantity": 18,
+        "price": 118.15,
+        "reason": "adaptive stale profit",
+        "cashAfter": 5899.47,
+        "positionAfter": 0,
+        "realizedPnlToday": 171.39,
+        "filledAt": "2026-04-20T17:35:22.971Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-21",
+      "symbolName": "VanEck Semiconductor ETF",
+      "fill": {
+        "symbol": "SMH",
+        "side": "sell",
+        "quantity": 20,
+        "price": 109.71,
+        "reason": "adaptive stale profit",
+        "cashAfter": 3772.77,
+        "positionAfter": 0,
+        "realizedPnlToday": 158.61,
+        "filledAt": "2026-04-20T17:35:22.971Z"
+      }
+    },
     {
       "kstDate": "2026-04-20",
       "symbolName": "ProShares UltraShort Semiconductors -2X",
