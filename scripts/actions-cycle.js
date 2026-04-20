@@ -97,12 +97,20 @@ function runStrategyCycle(state, quotes, fills) {
     return;
   }
 
-  if (!currentHoldingSymbol(state)) {
-    if (state.cooldownRemaining > 0) {
-      state.cooldownRemaining -= 1;
-      return;
+  if (state.cooldownRemaining > 0) {
+    state.cooldownRemaining -= 1;
+    return;
+  }
+
+  const openPositions = Object.values(state.positions).filter((quantity) => quantity > 0).length;
+  const maxPositions = config.strategy.max_concurrent_positions ?? 1;
+  const slots = Math.max(0, maxPositions - openPositions);
+  if (slots > 0) {
+    const candidates = selectEntryCandidates(state, quotes, slots);
+    for (const symbol of candidates) {
+      if (state.tradeCount >= config.strategy.max_daily_trades) break;
+      buySymbol(state, symbol, quotes[symbol].price, fills, "portfolio entry");
     }
-    buySymbol(state, state.nextSymbol, quotes[state.nextSymbol].price, fills, "scheduled entry");
   }
 }
 
@@ -140,9 +148,11 @@ function checkExitOrders(state, quotes, fills) {
 }
 
 function buySymbol(state, symbol, price, fills, reason) {
-  const allocation = allocationFraction(state);
+  if ((state.positions[symbol] ?? 0) > 0) return;
+  const allocation = config.strategy.per_position_allocation ?? allocationFraction(state);
   const equity = estimateEquity(state, objectQuotesFromPrices(state));
-  const quantity = Math.floor((equity * allocation) / price);
+  const budget = Math.min(state.cash, equity * allocation);
+  const quantity = Math.floor(budget / price);
   if (quantity <= 0) return;
   state.cash -= quantity * price;
   state.positions[symbol] = (state.positions[symbol] ?? 0) + quantity;
@@ -224,6 +234,42 @@ function adaptiveExitReason(state, order, quote, pnlRate, holdingCycles) {
     return "adaptive rotate on relative strength";
   }
   return null;
+}
+
+function selectEntryCandidates(state, quotes, slots) {
+  const limit = Math.min(slots, config.strategy.entry_candidates_per_cycle ?? slots);
+  const allowedSymbols = directionalCandidateSymbols(state);
+  return Object.values(quotes)
+    .filter((quote) => allowedSymbols.includes(quote.symbol))
+    .filter((quote) => quote.price > 0 && (state.positions[quote.symbol] ?? 0) <= 0)
+    .filter((quote) => !state.exitOrders.some((order) => order.symbol === quote.symbol))
+    .map((quote) => ({ symbol: quote.symbol, score: entryScore(state, quote.symbol) }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map((candidate) => candidate.symbol);
+}
+
+function directionalCandidateSymbols(state) {
+  const longCandidates = config.strategy.long_candidates ?? [config.strategy.long_symbol];
+  const inverseCandidates = config.strategy.inverse_candidates ?? [config.strategy.inverse_symbol];
+  const longMomentum = recentMomentum(state, config.strategy.long_symbol);
+  const inverseMomentum = recentMomentum(state, config.strategy.inverse_symbol);
+  return inverseMomentum > longMomentum ? inverseCandidates : longCandidates;
+}
+
+function entryScore(state, symbol) {
+  const momentum = recentMomentum(state, symbol);
+  const isCoreLong = symbol === config.strategy.long_symbol ? 0.015 : 0;
+  const isCoreInverse = symbol === config.strategy.inverse_symbol ? 0.012 : 0;
+  const leveragedBias = /L$|S$|2X|3X|USD|SSG|233740|233160|530107|520057/.test(symbol) ? 0.006 : 0;
+  const seed = deterministicJitter(state.tick, symbol) * 0.004;
+  return momentum + isCoreLong + isCoreInverse + leveragedBias + seed;
+}
+
+function deterministicJitter(tick, symbol) {
+  let hash = tick * 131;
+  for (const char of symbol) hash = (hash * 33 + char.charCodeAt(0)) % 100000;
+  return hash / 100000;
 }
 
 function chooseNextSymbolByMomentum(state) {
@@ -311,6 +357,9 @@ function buildStatus(state, quotes) {
       rotationCount: state.rotationCount,
       allocationIndex: state.allocationIndex,
       currentAllocationFraction: allocationFraction(state),
+      maxConcurrentPositions: config.strategy.max_concurrent_positions ?? 1,
+      perPositionAllocation: config.strategy.per_position_allocation ?? allocationFraction(state),
+      activeCandidateSide: directionalCandidateSymbols(state).includes(config.strategy.inverse_symbol) ? "inverse" : "long",
       perTradeTakeProfit: config.strategy.per_trade_take_profit,
       switchLossThreshold: config.strategy.switch_loss_threshold,
       adaptiveExit: config.strategy.adaptive_exit,
@@ -408,6 +457,7 @@ function renderDashboard() {
     const row = (cells) => "<tr>" + cells.map((c) => "<td>" + c + "</td>").join("") + "</tr>";
     const reason = (v) => ({
       "scheduled entry": "예약 진입",
+      "portfolio entry": "포트폴리오 진입",
       "take profit bracket": "익절 체결",
       "stop loss bracket": "손절 회전",
       "adaptive trailing profit": "고점 이탈 익절",

@@ -6,62 +6,77 @@
   "rows": [
     {
       "kstDate": "2026-04-20",
-      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "symbolName": "ProShares Ultra Semiconductors 2X",
       "fill": {
-        "symbol": "SOXL",
+        "symbol": "USD",
         "side": "buy",
-        "quantity": 26,
-        "price": 135.56,
-        "reason": "scheduled entry",
-        "cashAfter": 6609.08,
-        "positionAfter": 26,
-        "realizedPnlToday": 133.64,
-        "filledAt": "2026-04-20T12:49:51.058Z"
+        "quantity": 19,
+        "price": 116.26,
+        "reason": "portfolio entry",
+        "cashAfter": 1419.82,
+        "positionAfter": 19,
+        "realizedPnlToday": 54.33,
+        "filledAt": "2026-04-20T13:10:14.529Z"
       }
     },
     {
       "kstDate": "2026-04-20",
-      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "symbolName": "GraniteShares 2x Long NVDA Daily ETF",
       "fill": {
-        "symbol": "SOXL",
+        "symbol": "NVDL",
+        "side": "buy",
+        "quantity": 13,
+        "price": 162.19,
+        "reason": "portfolio entry",
+        "cashAfter": 3628.76,
+        "positionAfter": 13,
+        "realizedPnlToday": 54.33,
+        "filledAt": "2026-04-20T13:10:14.529Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "KODEX 코스닥150레버리지",
+      "fill": {
+        "symbol": "233740",
         "side": "sell",
-        "quantity": 26,
-        "price": 135.56,
+        "quantity": 12,
+        "price": 176.77,
         "reason": "adaptive stale profit",
-        "cashAfter": 10133.64,
+        "cashAfter": 5737.23,
         "positionAfter": 0,
-        "realizedPnlToday": 133.64,
-        "filledAt": "2026-04-20T12:49:51.058Z"
+        "realizedPnlToday": 54.33,
+        "filledAt": "2026-04-20T13:10:14.529Z"
       }
     },
     {
       "kstDate": "2026-04-20",
-      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "symbolName": "TIGER 코스닥150 레버리지",
       "fill": {
-        "symbol": "SOXL",
-        "side": "buy",
-        "quantity": 26,
-        "price": 134.57,
-        "reason": "scheduled entry",
-        "cashAfter": 6609.08,
-        "positionAfter": 26,
-        "realizedPnlToday": 107.9,
-        "filledAt": "2026-04-20T12:49:50.803Z"
-      }
-    },
-    {
-      "kstDate": "2026-04-20",
-      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
-      "fill": {
-        "symbol": "SOXL",
+        "symbol": "233160",
         "side": "sell",
-        "quantity": 26,
-        "price": 134.57,
-        "reason": "take profit bracket",
-        "cashAfter": 10107.9,
+        "quantity": 12,
+        "price": 183.72,
+        "reason": "adaptive stale profit",
+        "cashAfter": 3615.99,
         "positionAfter": 0,
-        "realizedPnlToday": 107.9,
-        "filledAt": "2026-04-20T12:49:50.803Z"
+        "realizedPnlToday": 50.49,
+        "filledAt": "2026-04-20T13:10:14.528Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "Direxion Daily TSLA Bull 2X",
+      "fill": {
+        "symbol": "TSLL",
+        "side": "buy",
+        "quantity": 15,
+        "price": 146.9,
+        "reason": "portfolio entry",
+        "cashAfter": 1411.35,
+        "positionAfter": 15,
+        "realizedPnlToday": 47.13,
+        "filledAt": "2026-04-20T13:10:14.414Z"
       }
     },
     {
@@ -70,43 +85,13 @@
       "fill": {
         "symbol": "SOXL",
         "side": "buy",
-        "quantity": 26,
-        "price": 133.36,
-        "reason": "scheduled entry",
-        "cashAfter": 6609.08,
-        "positionAfter": 26,
-        "realizedPnlToday": 76.44,
-        "filledAt": "2026-04-20T12:49:50.546Z"
-      }
-    },
-    {
-      "kstDate": "2026-04-20",
-      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
-      "fill": {
-        "symbol": "SOXL",
-        "side": "sell",
-        "quantity": 26,
-        "price": 133.36,
-        "reason": "take profit bracket",
-        "cashAfter": 10076.44,
-        "positionAfter": 0,
-        "realizedPnlToday": 76.44,
-        "filledAt": "2026-04-20T12:49:50.546Z"
-      }
-    },
-    {
-      "kstDate": "2026-04-20",
-      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
-      "fill": {
-        "symbol": "SOXL",
-        "side": "buy",
-        "quantity": 26,
+        "quantity": 16,
         "price": 132.1,
-        "reason": "scheduled entry",
-        "cashAfter": 6609.08,
-        "positionAfter": 26,
-        "realizedPnlToday": 43.68,
-        "filledAt": "2026-04-20T12:49:50.214Z"
+        "reason": "portfolio entry",
+        "cashAfter": 3614.85,
+        "positionAfter": 16,
+        "realizedPnlToday": 47.13,
+        "filledAt": "2026-04-20T13:10:14.414Z"
       }
     },
     {
@@ -115,28 +100,88 @@
       "fill": {
         "symbol": "SOXL",
         "side": "sell",
-        "quantity": 26,
+        "quantity": 16,
         "price": 132.1,
         "reason": "take profit bracket",
-        "cashAfter": 10043.68,
+        "cashAfter": 5728.45,
         "positionAfter": 0,
-        "realizedPnlToday": 43.68,
-        "filledAt": "2026-04-20T12:49:50.214Z"
+        "realizedPnlToday": 47.13,
+        "filledAt": "2026-04-20T13:10:14.412Z"
       }
     },
     {
       "kstDate": "2026-04-20",
-      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "symbolName": "Direxion Daily TSLA Bull 2X",
       "fill": {
-        "symbol": "SOXL",
+        "symbol": "TSLL",
+        "side": "sell",
+        "quantity": 15,
+        "price": 146.9,
+        "reason": "take profit bracket",
+        "cashAfter": 3614.85,
+        "positionAfter": 0,
+        "realizedPnlToday": 20.25,
+        "filledAt": "2026-04-20T13:10:14.412Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "TIGER 코스닥150 레버리지",
+      "fill": {
+        "symbol": "233160",
         "side": "buy",
-        "quantity": 26,
-        "price": 130.42,
-        "reason": "scheduled entry",
-        "cashAfter": 6609.08,
-        "positionAfter": 26,
+        "quantity": 12,
+        "price": 183.44,
+        "reason": "portfolio entry",
+        "cashAfter": 1411.35,
+        "positionAfter": 12,
         "realizedPnlToday": 0,
-        "filledAt": "2026-04-20T12:31:19.392Z"
+        "filledAt": "2026-04-20T13:10:14.297Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "KODEX 코스닥150레버리지",
+      "fill": {
+        "symbol": "233740",
+        "side": "buy",
+        "quantity": 12,
+        "price": 176.45,
+        "reason": "portfolio entry",
+        "cashAfter": 3612.63,
+        "positionAfter": 12,
+        "realizedPnlToday": 0,
+        "filledAt": "2026-04-20T13:10:14.297Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "Direxion Daily TSLA Bull 2X",
+      "fill": {
+        "symbol": "TSLL",
+        "side": "buy",
+        "quantity": 15,
+        "price": 145.55,
+        "reason": "portfolio entry",
+        "cashAfter": 5730.03,
+        "positionAfter": 15,
+        "realizedPnlToday": 0,
+        "filledAt": "2026-04-20T13:09:59.822Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "fill": {
+        "symbol": "SOXL",
+        "side": "buy",
+        "quantity": 16,
+        "price": 130.42,
+        "reason": "portfolio entry",
+        "cashAfter": 7913.28,
+        "positionAfter": 16,
+        "realizedPnlToday": 0,
+        "filledAt": "2026-04-20T13:09:59.822Z"
       }
     }
   ]
