@@ -444,7 +444,7 @@ function renderDashboard() {
       <div class="panel"><div class="metric">&#44228;&#51340; &#49688;&#51061;&#47456;</div><div class="value" id="rate">-</div></div>
       <div class="panel"><div class="metric">&#47785;&#54364; &#51652;&#54665;&#47456;</div><div class="value" id="progress">-</div></div>
     </div>
-    <section class="panel"><h2>&#47784;&#45768;&#53552;&#47553; &#51333;&#47785;</h2><table><thead><tr><th>No.</th><th>&#51333;&#47785;</th><th>&#51333;&#47785;&#47749;</th><th>&#44032;&#44201;</th></tr></thead><tbody id="watchlist"></tbody></table></section>
+    <section class="panel"><h2>&#47784;&#45768;&#53552;&#47553; &#51333;&#47785;</h2><table><thead><tr><th>No.</th><th>&#51333;&#47785;</th><th>&#51333;&#47785;&#47749;</th><th>&#44032;&#44201;</th><th>&#52572;&#44540; &#54869;&#51064;</th></tr></thead><tbody id="watchlist"></tbody></table></section>
     <section class="panel"><h2>&#48372;&#50976; &#51333;&#47785;</h2><table><thead><tr><th>&#51333;&#47785;</th><th>&#51333;&#47785;&#47749;</th><th>&#49688;&#47049;</th><th>&#54788;&#51116;&#44032;</th><th>&#49688;&#51061;&#47456;</th></tr></thead><tbody id="positions"></tbody></table></section>
     <section class="panel"><h2>&#50696;&#50557; &#47588;&#46020;</h2><table><thead><tr><th>&#51333;&#47785;</th><th>&#49688;&#47049;</th><th>&#51061;&#51208;&#44032;</th><th>&#49552;&#51208;&#44032;</th></tr></thead><tbody id="orders"></tbody></table></section>
     <section class="panel"><h2>&#52572;&#44540; &#52404;&#44208;</h2><table><thead><tr><th>No.</th><th>&#51333;&#47785;</th><th>&#44396;&#48516;</th><th>&#49688;&#47049;</th><th>&#44032;&#44201;</th><th>&#51060;&#50976;</th><th>KST &#49884;&#44036;</th></tr></thead><tbody id="fills"></tbody></table></section>
@@ -475,14 +475,14 @@ function renderDashboard() {
       document.getElementById("cash").textContent = money(status.account.cash);
       document.getElementById("rate").textContent = pct(status.strategyStatus?.accountPnlRate);
       document.getElementById("progress").textContent = ((Number(status.strategyStatus?.progressRate ?? 0) * 100).toFixed(0)) + "%";
-      document.getElementById("watchlist").innerHTML = (status.quotes ?? []).map((q, i) => row([i + 1, q.symbol, status.symbolNames?.[q.symbol] ?? "-", money(q.price)])).join("") || row(["-", "-", "-", "-"]);
+      document.getElementById("watchlist").innerHTML = (status.quotes ?? []).map((q, i) => row([i + 1, q.symbol, status.symbolNames?.[q.symbol] ?? "-", money(q.price), kst(q.timestamp)])).join("") || row(["-", "-", "-", "-", "-"]);
       document.getElementById("positions").innerHTML = (status.account.positions ?? []).map((p) => row([p.symbol, status.symbolNames?.[p.symbol] ?? "-", p.quantity, money(p.marketPrice), pct(p.unrealizedPnlRate)])).join("") || row(["-", "-", "-", "-", "-"]);
       document.getElementById("orders").innerHTML = (status.account.exitOrders ?? []).map((o) => row([o.symbol, o.quantity, money(o.takeProfitPrice), money(o.stopLossPrice)])).join("") || row(["-", "-", "-", "-"]);
       document.getElementById("fills").innerHTML = [...(status.account.recentFills ?? [])].reverse().map((f, i) => row([i + 1, f.symbol, f.side === "buy" ? "매수" : "매도", f.quantity, money(f.price), reason(f.reason), kst(f.filledAt)])).join("") || row(["-", "-", "-", "-", "-", "-", "-"]);
       document.getElementById("rounds").innerHTML = (status.round?.history ?? []).map((r) => row([r.no, r.result === "target" ? "목표달성" : "손실중지", pct(r.pnlRate), money(r.pnl), money(r.startEquity), money(r.endEquity), kst(r.endedAt)])).join("") || row(["-", "-", "-", "-", "-", "-", "-"]);
     }
     load();
-    setInterval(load, 180000);
+    setInterval(load, 60000);
   </script>
 </body>
 </html>`;

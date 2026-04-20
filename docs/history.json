@@ -6,6 +6,126 @@
   "rows": [
     {
       "kstDate": "2026-04-20",
+      "symbolName": "VanEck Semiconductor ETF",
+      "fill": {
+        "symbol": "SMH",
+        "side": "buy",
+        "quantity": 20,
+        "price": 108.85,
+        "reason": "portfolio entry",
+        "cashAfter": 1469.12,
+        "positionAfter": 20,
+        "realizedPnlToday": 112.15,
+        "filledAt": "2026-04-20T13:25:45.412Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "ProShares Ultra Semiconductors 2X",
+      "fill": {
+        "symbol": "USD",
+        "side": "buy",
+        "quantity": 18,
+        "price": 117.44,
+        "reason": "portfolio entry",
+        "cashAfter": 3646.12,
+        "positionAfter": 18,
+        "realizedPnlToday": 112.15,
+        "filledAt": "2026-04-20T13:25:45.412Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "ProShares Ultra Semiconductors 2X",
+      "fill": {
+        "symbol": "USD",
+        "side": "sell",
+        "quantity": 19,
+        "price": 117.44,
+        "reason": "take profit bracket",
+        "cashAfter": 5760.04,
+        "positionAfter": 0,
+        "realizedPnlToday": 112.15,
+        "filledAt": "2026-04-20T13:25:45.410Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "Direxion Daily TSLA Bull 2X",
+      "fill": {
+        "symbol": "TSLL",
+        "side": "buy",
+        "quantity": 15,
+        "price": 147.89,
+        "reason": "portfolio entry",
+        "cashAfter": 3528.68,
+        "positionAfter": 15,
+        "realizedPnlToday": 89.73,
+        "filledAt": "2026-04-20T13:22:55.745Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "fill": {
+        "symbol": "SOXL",
+        "side": "buy",
+        "quantity": 16,
+        "price": 133.36,
+        "reason": "portfolio entry",
+        "cashAfter": 5747.03,
+        "positionAfter": 16,
+        "realizedPnlToday": 89.73,
+        "filledAt": "2026-04-20T13:22:55.744Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "fill": {
+        "symbol": "SOXL",
+        "side": "sell",
+        "quantity": 16,
+        "price": 133.36,
+        "reason": "take profit bracket",
+        "cashAfter": 7880.79,
+        "positionAfter": 0,
+        "realizedPnlToday": 89.73,
+        "filledAt": "2026-04-20T13:22:55.743Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "Direxion Daily TSLA Bull 2X",
+      "fill": {
+        "symbol": "TSLL",
+        "side": "sell",
+        "quantity": 15,
+        "price": 147.89,
+        "reason": "adaptive stale profit",
+        "cashAfter": 5747.03,
+        "positionAfter": 0,
+        "realizedPnlToday": 69.57,
+        "filledAt": "2026-04-20T13:22:55.743Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "GraniteShares 2x Long NVDA Daily ETF",
+      "fill": {
+        "symbol": "NVDL",
+        "side": "sell",
+        "quantity": 13,
+        "price": 162.22,
+        "reason": "adaptive rotate on relative strength",
+        "cashAfter": 3528.68,
+        "positionAfter": 0,
+        "realizedPnlToday": 54.72,
+        "filledAt": "2026-04-20T13:22:55.743Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
       "symbolName": "ProShares Ultra Semiconductors 2X",
       "fill": {
         "symbol": "USD",

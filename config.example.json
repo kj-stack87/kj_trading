@@ -76,7 +76,7 @@
   "git_publish": {
     "enabled": true,
     "docs_dir": "docs",
-    "interval_seconds": 180,
+    "interval_seconds": 300,
     "commit_and_push": false
   }
 }

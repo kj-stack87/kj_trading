@@ -2,8 +2,15 @@ name: Trading Simulation
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/trading-sim.yml"
+      - "config.example.json"
+      - "scripts/**"
   schedule:
-    - cron: "*/3 * * * *"
+    - cron: "*/5 * * * *"
 
 permissions:
   contents: write
