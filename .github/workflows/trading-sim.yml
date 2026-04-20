@@ -3,7 +3,7 @@ name: Trading Simulation
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/3 * * * *"
 
 permissions:
   contents: write

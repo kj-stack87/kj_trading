@@ -28,13 +28,14 @@ writeJson(STATUS_PATH, status);
 writeJson(HISTORY_PATH, history);
 fs.writeFileSync(INDEX_PATH, renderDashboard(), "utf8");
 
-console.log(`cycle=${state.tick} equity=${status.account.equity} fills=${fills.length}`);
+console.log(`cycle=${state.tick} round=${state.roundNo} equity=${status.account.equity} fills=${fills.length}`);
 
 function loadState() {
-  if (fs.existsSync(STATE_PATH)) {
-    return JSON.parse(fs.readFileSync(STATE_PATH, "utf8"));
-  }
+  if (fs.existsSync(STATE_PATH)) return JSON.parse(fs.readFileSync(STATE_PATH, "utf8"));
+  return freshState();
+}
 
+function freshState() {
   return {
     tick: 0,
     randomState: 42,
@@ -63,7 +64,6 @@ function nextQuotes(state) {
   state.tick += 1;
   const quotes = {};
   const now = new Date().toISOString();
-
   config.symbols.forEach((symbol, index) => {
     const current = state.prices[symbol] ?? config.market_data.seed_price;
     const wave = Math.sin((state.tick + index) / 5) * 0.6;
@@ -72,13 +72,11 @@ function nextQuotes(state) {
     state.prices[symbol] = price;
     quotes[symbol] = { symbol, price, timestamp: now };
   });
-
   return quotes;
 }
 
 function runStrategyCycle(state, quotes, fills) {
   if (state.targetReached || state.tradeCount >= config.strategy.max_daily_trades) return;
-
   const equity = estimateEquity(state, quotes);
   state.startEquity ??= equity;
   const targetEquity = state.startEquity * (1 + config.strategy.daily_profit_target);
@@ -86,26 +84,16 @@ function runStrategyCycle(state, quotes, fills) {
 
   if (equity >= targetEquity) {
     sellAll(state, quotes, fills, "account target reached");
-    state.pendingRoundClose = {
-      result: "target",
-      reason: "10% target reached",
-      closedAt: new Date().toISOString()
-    };
+    state.pendingRoundClose = { result: "target", reason: "target reached", closedAt: new Date().toISOString() };
     return;
   }
-
   if (equity <= dailyStopEquity) {
     sellAll(state, quotes, fills, "daily stop loss");
-    state.pendingRoundClose = {
-      result: "stop_loss",
-      reason: "daily stop loss reached",
-      closedAt: new Date().toISOString()
-    };
+    state.pendingRoundClose = { result: "stop_loss", reason: "daily stop loss reached", closedAt: new Date().toISOString() };
     return;
   }
 
-  const currentSymbol = currentHoldingSymbol(state);
-  if (!currentSymbol) {
+  if (!currentHoldingSymbol(state)) {
     if (state.cooldownRemaining > 0) {
       state.cooldownRemaining -= 1;
       return;
@@ -119,7 +107,6 @@ function checkExitOrders(state, quotes, fills) {
     const quote = quotes[order.symbol];
     const quantity = state.positions[order.symbol] ?? 0;
     if (!quote || quantity <= 0) continue;
-
     if (quote.price >= order.takeProfitPrice) {
       sellSymbol(state, order.symbol, Math.min(quantity, order.quantity), quote.price, fills, "take profit bracket");
       state.allocationIndex = 0;
@@ -138,13 +125,10 @@ function buySymbol(state, symbol, price, fills, reason) {
   const equity = estimateEquity(state, objectQuotesFromPrices(state));
   const quantity = Math.floor((equity * allocation) / price);
   if (quantity <= 0) return;
-
-  const cost = quantity * price;
-  state.cash -= cost;
+  state.cash -= quantity * price;
   state.positions[symbol] = (state.positions[symbol] ?? 0) + quantity;
   state.averageCost[symbol] = price;
   state.tradeCount += 1;
-
   addFill(state, fills, { symbol, side: "buy", quantity, price, reason });
   placeExitBracket(state, symbol, quantity, price);
 }
@@ -152,7 +136,6 @@ function buySymbol(state, symbol, price, fills, reason) {
 function sellSymbol(state, symbol, quantity, price, fills, reason) {
   const current = state.positions[symbol] ?? 0;
   if (current <= 0 || quantity <= 0) return;
-
   const sellQuantity = Math.min(quantity, current);
   const averageCost = state.averageCost[symbol] ?? price;
   state.cash += sellQuantity * price;
@@ -197,6 +180,50 @@ function prepareNextAfterLoss(state, nextSymbol) {
   }
 }
 
+function ensureRoundState(state) {
+  state.roundNo ??= 1;
+  state.roundStartedAt ??= new Date().toISOString();
+  state.roundHistory ??= [];
+  state.pendingRoundClose ??= null;
+}
+
+function completeRoundIfNeeded(state, quotes) {
+  if (!state.pendingRoundClose) return;
+  const endEquity = estimateEquity(state, quotes);
+  const startEquity = state.startEquity ?? endEquity;
+  const pnl = endEquity - startEquity;
+  state.roundHistory.unshift({
+    no: state.roundNo,
+    result: state.pendingRoundClose.result,
+    reason: state.pendingRoundClose.reason,
+    startedAt: state.roundStartedAt,
+    endedAt: state.pendingRoundClose.closedAt,
+    startEquity: round2(startEquity),
+    endEquity: round2(endEquity),
+    pnl: round2(pnl),
+    pnlRate: startEquity > 0 ? round4(pnl / startEquity) : 0,
+    tradeCount: state.tradeCount,
+    rotationCount: state.rotationCount
+  });
+  state.roundHistory = state.roundHistory.slice(0, 100);
+  resetForNextRound(state, endEquity);
+}
+
+function resetForNextRound(state, equity) {
+  state.roundNo += 1;
+  state.roundStartedAt = new Date().toISOString();
+  state.startEquity = equity;
+  state.targetReached = false;
+  state.nextSymbol = config.strategy.long_symbol;
+  state.allocationIndex = 0;
+  state.rotationCount = 0;
+  state.consecutiveLosses = 0;
+  state.cooldownRemaining = 0;
+  state.tradeCount = 0;
+  state.exitOrders = [];
+  state.pendingRoundClose = null;
+}
+
 function buildStatus(state, quotes) {
   const equity = estimateEquity(state, quotes);
   const accountPnlRate = state.startEquity ? (equity - state.startEquity) / state.startEquity : 0;
@@ -204,11 +231,7 @@ function buildStatus(state, quotes) {
   return {
     mode: "github-actions-paper",
     publishedAt: new Date().toISOString(),
-    round: {
-      no: state.roundNo,
-      startedAt: state.roundStartedAt,
-      history: state.roundHistory ?? []
-    },
+    round: { no: state.roundNo, startedAt: state.roundStartedAt, history: state.roundHistory ?? [] },
     symbolNames: config.symbol_names,
     quotes: Object.values(quotes),
     strategyConfig: { dailyProfitTarget: config.strategy.daily_profit_target },
@@ -238,15 +261,7 @@ function buildStatus(state, quotes) {
       positions: Object.entries(state.positions).map(([symbol, quantity]) => {
         const price = quotes[symbol]?.price ?? state.averageCost[symbol] ?? 0;
         const avg = state.averageCost[symbol] ?? 0;
-        return {
-          symbol,
-          quantity,
-          averageCost: round2(avg),
-          marketPrice: round2(price),
-          marketValue: round2(quantity * price),
-          unrealizedPnl: round2((price - avg) * quantity),
-          unrealizedPnlRate: avg > 0 ? round4((price - avg) / avg) : 0
-        };
+        return { symbol, quantity, averageCost: round2(avg), marketPrice: round2(price), marketValue: round2(quantity * price), unrealizedPnl: round2((price - avg) * quantity), unrealizedPnlRate: avg > 0 ? round4((price - avg) / avg) : 0 };
       }),
       recentFills: state.fills.slice(0, 50),
       exitOrders: state.exitOrders
@@ -258,117 +273,27 @@ function buildHistory(state) {
   return {
     dates: [...new Set(state.fills.map((fill) => toKstDate(fill.filledAt)))],
     rounds: state.roundHistory ?? [],
-    rows: state.fills.map((fill) => ({
-      kstDate: toKstDate(fill.filledAt),
-      symbolName: config.symbol_names?.[fill.symbol] ?? "-",
-      fill
-    }))
+    rows: state.fills.map((fill) => ({ kstDate: toKstDate(fill.filledAt), symbolName: config.symbol_names?.[fill.symbol] ?? "-", fill }))
   };
-}
-
-function ensureRoundState(state) {
-  state.roundNo ??= 1;
-  state.roundStartedAt ??= new Date().toISOString();
-  state.roundHistory ??= [];
-  state.pendingRoundClose ??= null;
-}
-
-function completeRoundIfNeeded(state, quotes) {
-  if (!state.pendingRoundClose) return;
-  const endEquity = estimateEquity(state, quotes);
-  const startEquity = state.startEquity ?? endEquity;
-  const pnl = endEquity - startEquity;
-  const pnlRate = startEquity > 0 ? pnl / startEquity : 0;
-
-  state.roundHistory.unshift({
-    no: state.roundNo,
-    result: state.pendingRoundClose.result,
-    reason: state.pendingRoundClose.reason,
-    startedAt: state.roundStartedAt,
-    endedAt: state.pendingRoundClose.closedAt,
-    startEquity: round2(startEquity),
-    endEquity: round2(endEquity),
-    pnl: round2(pnl),
-    pnlRate: round4(pnlRate),
-    tradeCount: state.tradeCount,
-    rotationCount: state.rotationCount
-  });
-  state.roundHistory = state.roundHistory.slice(0, 100);
-
-  resetForNextRound(state, endEquity);
-}
-
-function resetForNextRound(state, equity) {
-  state.roundNo += 1;
-  state.roundStartedAt = new Date().toISOString();
-  state.startEquity = equity;
-  state.targetReached = false;
-  state.nextSymbol = config.strategy.long_symbol;
-  state.allocationIndex = 0;
-  state.rotationCount = 0;
-  state.consecutiveLosses = 0;
-  state.cooldownRemaining = 0;
-  state.tradeCount = 0;
-  state.exitOrders = [];
-  state.pendingRoundClose = null;
 }
 
 function addFill(state, fills, fill) {
-  const record = {
-    ...fill,
-    price: round2(fill.price),
-    cashAfter: round2(state.cash),
-    positionAfter: state.positions[fill.symbol] ?? 0,
-    realizedPnlToday: round2(state.realizedPnlToday),
-    filledAt: new Date().toISOString()
-  };
+  const record = { ...fill, price: round2(fill.price), cashAfter: round2(state.cash), positionAfter: state.positions[fill.symbol] ?? 0, realizedPnlToday: round2(state.realizedPnlToday), filledAt: new Date().toISOString() };
   fills.push(record);
   state.fills.unshift(record);
   state.fills = state.fills.slice(0, 200);
 }
 
-function currentHoldingSymbol(state) {
-  return Object.entries(state.positions).find(([, quantity]) => quantity > 0)?.[0] ?? null;
-}
-
-function allocationFraction(state) {
-  return config.strategy.allocation_steps[Math.min(state.allocationIndex, config.strategy.allocation_steps.length - 1)];
-}
-
-function estimateEquity(state, quotes) {
-  return state.cash + Object.entries(state.positions).reduce((sum, [symbol, quantity]) => {
-    return sum + quantity * (quotes[symbol]?.price ?? state.averageCost[symbol] ?? 0);
-  }, 0);
-}
-
-function objectQuotesFromPrices(state) {
-  return Object.fromEntries(Object.entries(state.prices).map(([symbol, price]) => [symbol, { symbol, price }]));
-}
-
-function nextRandomBetween(state, min, max) {
-  state.randomState = (1664525 * state.randomState + 1013904223) % 4294967296;
-  return min + (state.randomState / 4294967296) * (max - min);
-}
-
-function writeJson(filePath, value) {
-  fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
-}
-
-function round2(value) {
-  return Math.round(value * 100) / 100;
-}
-
-function round4(value) {
-  return Math.round(value * 10000) / 10000;
-}
-
+function currentHoldingSymbol(state) { return Object.entries(state.positions).find(([, quantity]) => quantity > 0)?.[0] ?? null; }
+function allocationFraction(state) { return config.strategy.allocation_steps[Math.min(state.allocationIndex, config.strategy.allocation_steps.length - 1)]; }
+function estimateEquity(state, quotes) { return state.cash + Object.entries(state.positions).reduce((sum, [symbol, quantity]) => sum + quantity * (quotes[symbol]?.price ?? state.averageCost[symbol] ?? 0), 0); }
+function objectQuotesFromPrices(state) { return Object.fromEntries(Object.entries(state.prices).map(([symbol, price]) => [symbol, { symbol, price }])); }
+function nextRandomBetween(state, min, max) { state.randomState = (1664525 * state.randomState + 1013904223) % 4294967296; return min + (state.randomState / 4294967296) * (max - min); }
+function writeJson(filePath, value) { fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8"); }
+function round2(value) { return Math.round(value * 100) / 100; }
+function round4(value) { return Math.round(value * 10000) / 10000; }
 function toKstDate(value) {
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Seoul",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  }).formatToParts(new Date(value));
+  const parts = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date(value));
   const map = Object.fromEntries(parts.map((part) => [part.type, part.value]));
   return `${map.year}-${map.month}-${map.day}`;
 }
@@ -394,19 +319,20 @@ function renderDashboard() {
   </style>
 </head>
 <body>
-  <header><h1>자동매매 아바타 스냅샷</h1><div id="published">불러오는 중...</div></header>
+  <header><h1>&#51088;&#46041;&#47588;&#47588; &#50500;&#48148;&#53440; &#49828;&#45257;&#49383;</h1><div id="published">&#48520;&#47084;&#50724;&#45716; &#51473;...</div></header>
   <main>
     <div class="grid">
-      <div class="panel"><div class="metric">현재 No.</div><div class="value" id="roundNo">-</div></div>
-      <div class="panel"><div class="metric">평가금</div><div class="value" id="equity">-</div></div>
-      <div class="panel"><div class="metric">현금</div><div class="value" id="cash">-</div></div>
-      <div class="panel"><div class="metric">계좌 수익률</div><div class="value" id="rate">-</div></div>
-      <div class="panel"><div class="metric">목표 진행률</div><div class="value" id="progress">-</div></div>
+      <div class="panel"><div class="metric">&#54788;&#51116; No.</div><div class="value" id="roundNo">-</div></div>
+      <div class="panel"><div class="metric">&#54217;&#44032;&#44552;</div><div class="value" id="equity">-</div></div>
+      <div class="panel"><div class="metric">&#54788;&#44552;</div><div class="value" id="cash">-</div></div>
+      <div class="panel"><div class="metric">&#44228;&#51340; &#49688;&#51061;&#47456;</div><div class="value" id="rate">-</div></div>
+      <div class="panel"><div class="metric">&#47785;&#54364; &#51652;&#54665;&#47456;</div><div class="value" id="progress">-</div></div>
     </div>
-    <section class="panel"><h2>보유 종목</h2><table><thead><tr><th>종목</th><th>종목명</th><th>수량</th><th>현재가</th><th>수익률</th></tr></thead><tbody id="positions"></tbody></table></section>
-    <section class="panel"><h2>예약 매도</h2><table><thead><tr><th>종목</th><th>수량</th><th>익절가</th><th>손절가</th></tr></thead><tbody id="orders"></tbody></table></section>
-    <section class="panel"><h2>최근 체결</h2><table><thead><tr><th>종목</th><th>구분</th><th>수량</th><th>가격</th><th>KST 시간</th></tr></thead><tbody id="fills"></tbody></table></section>
-    <section class="panel"><h2>No.별 완료 이력</h2><table><thead><tr><th>No.</th><th>결과</th><th>수익률</th><th>손익</th><th>시작 평가금</th><th>종료 평가금</th><th>KST 종료</th></tr></thead><tbody id="rounds"></tbody></table></section>
+    <section class="panel"><h2>&#47784;&#45768;&#53552;&#47553; &#51333;&#47785;</h2><table><thead><tr><th>No.</th><th>&#51333;&#47785;</th><th>&#51333;&#47785;&#47749;</th><th>&#44032;&#44201;</th></tr></thead><tbody id="watchlist"></tbody></table></section>
+    <section class="panel"><h2>&#48372;&#50976; &#51333;&#47785;</h2><table><thead><tr><th>&#51333;&#47785;</th><th>&#51333;&#47785;&#47749;</th><th>&#49688;&#47049;</th><th>&#54788;&#51116;&#44032;</th><th>&#49688;&#51061;&#47456;</th></tr></thead><tbody id="positions"></tbody></table></section>
+    <section class="panel"><h2>&#50696;&#50557; &#47588;&#46020;</h2><table><thead><tr><th>&#51333;&#47785;</th><th>&#49688;&#47049;</th><th>&#51061;&#51208;&#44032;</th><th>&#49552;&#51208;&#44032;</th></tr></thead><tbody id="orders"></tbody></table></section>
+    <section class="panel"><h2>&#52572;&#44540; &#52404;&#44208;</h2><table><thead><tr><th>No.</th><th>&#51333;&#47785;</th><th>&#44396;&#48516;</th><th>&#49688;&#47049;</th><th>&#44032;&#44201;</th><th>KST &#49884;&#44036;</th></tr></thead><tbody id="fills"></tbody></table></section>
+    <section class="panel"><h2>No.&#48324; &#50756;&#47308; &#51060;&#47141;</h2><table><thead><tr><th>No.</th><th>&#44208;&#44284;</th><th>&#49688;&#51061;&#47456;</th><th>&#49552;&#51061;</th><th>&#49884;&#51089; &#54217;&#44032;&#44552;</th><th>&#51333;&#47308; &#54217;&#44032;&#44552;</th><th>KST &#51333;&#47308;</th></tr></thead><tbody id="rounds"></tbody></table></section>
   </main>
   <script>
     const money = (v) => new Intl.NumberFormat("en-US", { style:"currency", currency:"USD" }).format(v ?? 0);
@@ -421,13 +347,14 @@ function renderDashboard() {
       document.getElementById("cash").textContent = money(status.account.cash);
       document.getElementById("rate").textContent = pct(status.strategyStatus?.accountPnlRate);
       document.getElementById("progress").textContent = ((Number(status.strategyStatus?.progressRate ?? 0) * 100).toFixed(0)) + "%";
+      document.getElementById("watchlist").innerHTML = (status.quotes ?? []).map((q, i) => row([i + 1, q.symbol, status.symbolNames?.[q.symbol] ?? "-", money(q.price)])).join("") || row(["-", "-", "-", "-"]);
       document.getElementById("positions").innerHTML = (status.account.positions ?? []).map((p) => row([p.symbol, status.symbolNames?.[p.symbol] ?? "-", p.quantity, money(p.marketPrice), pct(p.unrealizedPnlRate)])).join("") || row(["-", "-", "-", "-", "-"]);
       document.getElementById("orders").innerHTML = (status.account.exitOrders ?? []).map((o) => row([o.symbol, o.quantity, money(o.takeProfitPrice), money(o.stopLossPrice)])).join("") || row(["-", "-", "-", "-"]);
-      document.getElementById("fills").innerHTML = (status.account.recentFills ?? []).map((f) => row([f.symbol, f.side === "buy" ? "매수" : "매도", f.quantity, money(f.price), kst(f.filledAt)])).join("") || row(["-", "-", "-", "-", "-"]);
+      document.getElementById("fills").innerHTML = [...(status.account.recentFills ?? [])].reverse().map((f, i) => row([i + 1, f.symbol, f.side === "buy" ? "매수" : "매도", f.quantity, money(f.price), kst(f.filledAt)])).join("") || row(["-", "-", "-", "-", "-", "-"]);
       document.getElementById("rounds").innerHTML = (status.round?.history ?? []).map((r) => row([r.no, r.result === "target" ? "목표달성" : "손실중지", pct(r.pnlRate), money(r.pnl), money(r.startEquity), money(r.endEquity), kst(r.endedAt)])).join("") || row(["-", "-", "-", "-", "-", "-", "-"]);
     }
     load();
-    setInterval(load, 30000);
+    setInterval(load, 180000);
   </script>
 </body>
 </html>`;
