@@ -7,6 +7,36 @@
   "rows": [
     {
       "kstDate": "2026-04-21",
+      "symbolName": "ProShares UltraShort Semiconductors -2X",
+      "fill": {
+        "symbol": "SSG",
+        "side": "buy",
+        "quantity": 17,
+        "price": 127.48,
+        "reason": "portfolio entry",
+        "cashAfter": 1580.34,
+        "positionAfter": 17,
+        "realizedPnlToday": 200.16,
+        "filledAt": "2026-04-20T22:30:07.175Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-21",
+      "symbolName": "Direxion Daily Semiconductor Bear 3X ETF",
+      "fill": {
+        "symbol": "SOXS",
+        "side": "buy",
+        "quantity": 15,
+        "price": 143.14,
+        "reason": "portfolio entry",
+        "cashAfter": 3747.5,
+        "positionAfter": 15,
+        "realizedPnlToday": 200.16,
+        "filledAt": "2026-04-20T22:30:07.175Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-21",
       "symbolName": "ProShares Ultra Semiconductors 2X",
       "fill": {
         "symbol": "USD",
