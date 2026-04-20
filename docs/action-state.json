@@ -1,32 +1,76 @@
 {
-  "tick": 6,
-  "randomState": 3605525518,
-  "cash": 1469.1200000000017,
+  "tick": 7,
+  "randomState": 3434693836,
+  "cash": 1578.5700000000015,
   "positions": {
-    "SOXL": 16,
-    "TSLL": 15,
     "USD": 18,
-    "SMH": 20
+    "SMH": 20,
+    "SOXS": 15,
+    "SSG": 17
   },
   "averageCost": {
-    "SOXL": 133.36,
-    "TSLL": 147.89,
     "USD": 117.44,
-    "SMH": 108.85
+    "SMH": 108.85,
+    "SOXS": 141.87,
+    "SSG": 126.11
   },
-  "realizedPnlToday": 112.15000000000019,
+  "realizedPnlToday": 141.41000000000025,
   "startEquity": 10000,
   "roundNo": 1,
   "roundStartedAt": "2026-04-20T13:09:59.819Z",
   "roundHistory": [],
   "targetReached": false,
-  "nextSymbol": "USD",
+  "nextSymbol": "SOXL",
   "allocationIndex": 0,
   "rotationCount": 1,
   "consecutiveLosses": 0,
   "cooldownRemaining": 0,
-  "tradeCount": 20,
+  "tradeCount": 24,
   "fills": [
+    {
+      "symbol": "SSG",
+      "side": "buy",
+      "quantity": 17,
+      "price": 126.11,
+      "reason": "portfolio entry",
+      "cashAfter": 1578.57,
+      "positionAfter": 17,
+      "realizedPnlToday": 141.41,
+      "filledAt": "2026-04-20T13:26:50.286Z"
+    },
+    {
+      "symbol": "SOXS",
+      "side": "buy",
+      "quantity": 15,
+      "price": 141.87,
+      "reason": "portfolio entry",
+      "cashAfter": 3722.44,
+      "positionAfter": 15,
+      "realizedPnlToday": 141.41,
+      "filledAt": "2026-04-20T13:26:50.286Z"
+    },
+    {
+      "symbol": "SOXL",
+      "side": "sell",
+      "quantity": 16,
+      "price": 134.57,
+      "reason": "take profit bracket",
+      "cashAfter": 5850.49,
+      "positionAfter": 0,
+      "realizedPnlToday": 141.41,
+      "filledAt": "2026-04-20T13:26:50.285Z"
+    },
+    {
+      "symbol": "TSLL",
+      "side": "sell",
+      "quantity": 15,
+      "price": 148.55,
+      "reason": "adaptive stale profit",
+      "cashAfter": 3697.37,
+      "positionAfter": 0,
+      "realizedPnlToday": 122.05,
+      "filledAt": "2026-04-20T13:26:50.285Z"
+    },
     {
       "symbol": "SMH",
       "side": "buy",
@@ -250,12 +294,34 @@
   ],
   "exitOrders": [
     {
+      "id": "SSG-1776691610286",
+      "symbol": "SSG",
+      "quantity": 17,
+      "entryPrice": 126.11,
+      "createdTick": 7,
+      "bestPrice": 126.11,
+      "takeProfitPrice": 127.12,
+      "stopLossPrice": 125.67,
+      "createdAt": "2026-04-20T13:26:50.286Z"
+    },
+    {
+      "id": "SOXS-1776691610286",
+      "symbol": "SOXS",
+      "quantity": 15,
+      "entryPrice": 141.87,
+      "createdTick": 7,
+      "bestPrice": 141.87,
+      "takeProfitPrice": 143,
+      "stopLossPrice": 141.37,
+      "createdAt": "2026-04-20T13:26:50.286Z"
+    },
+    {
       "id": "SMH-1776691545412",
       "symbol": "SMH",
       "quantity": 20,
       "entryPrice": 108.85,
       "createdTick": 6,
-      "bestPrice": 108.85,
+      "bestPrice": 109.21,
       "takeProfitPrice": 109.72,
       "stopLossPrice": 108.47,
       "createdAt": "2026-04-20T13:25:45.412Z"
@@ -266,32 +332,10 @@
       "quantity": 18,
       "entryPrice": 117.44,
       "createdTick": 6,
-      "bestPrice": 117.44,
+      "bestPrice": 117.76,
       "takeProfitPrice": 118.38,
       "stopLossPrice": 117.03,
       "createdAt": "2026-04-20T13:25:45.412Z"
-    },
-    {
-      "id": "TSLL-1776691375745",
-      "symbol": "TSLL",
-      "quantity": 15,
-      "entryPrice": 147.89,
-      "createdTick": 5,
-      "bestPrice": 148.29,
-      "takeProfitPrice": 149.07,
-      "stopLossPrice": 147.37,
-      "createdAt": "2026-04-20T13:22:55.745Z"
-    },
-    {
-      "id": "SOXL-1776691375744",
-      "symbol": "SOXL",
-      "quantity": 16,
-      "entryPrice": 133.36,
-      "createdTick": 5,
-      "bestPrice": 133.98,
-      "takeProfitPrice": 134.43,
-      "stopLossPrice": 132.89,
-      "createdAt": "2026-04-20T13:22:55.744Z"
     }
   ],
   "priceHistory": {
@@ -301,7 +345,8 @@
       183.79,
       183.72,
       183.64,
-      183.71
+      183.71,
+      183.67
     ],
     "233740": [
       175.73,
@@ -309,7 +354,8 @@
       176.91,
       176.77,
       177.07,
-      177.3
+      177.3,
+      176.85
     ],
     "520057": [
       197.95,
@@ -317,7 +363,8 @@
       198.2,
       198.31,
       197.91,
-      197.78
+      197.78,
+      197.54
     ],
     "530107": [
       190.41,
@@ -325,7 +372,8 @@
       190.8,
       190.65,
       190.64,
-      190.51
+      190.51,
+      190.48
     ],
     "SOXX": [
       99.95,
@@ -333,7 +381,8 @@
       100.57,
       100.72,
       101.54,
-      101.83
+      101.83,
+      102.35
     ],
     "SMH": [
       107.45,
@@ -341,7 +390,8 @@
       107.62,
       107.91,
       108.25,
-      108.85
+      108.85,
+      109.21
     ],
     "USD": [
       115.39,
@@ -349,7 +399,8 @@
       115.74,
       116.26,
       117.11,
-      117.44
+      117.44,
+      117.76
     ],
     "SSG": [
       122.74,
@@ -357,7 +408,8 @@
       124.15,
       124.48,
       125.14,
-      125.54
+      125.54,
+      126.11
     ],
     "SOXL": [
       130.42,
@@ -365,7 +417,8 @@
       132.1,
       132.89,
       133.36,
-      133.98
+      133.98,
+      134.57
     ],
     "SOXS": [
       137.73,
@@ -373,7 +426,8 @@
       139.43,
       140.08,
       140.5,
-      141.12
+      141.12,
+      141.87
     ],
     "TSLL": [
       145.55,
@@ -381,7 +435,8 @@
       146.9,
       147.66,
       147.89,
-      148.29
+      148.29,
+      148.55
     ],
     "TSLQ": [
       152.83,
@@ -389,7 +444,8 @@
       153.65,
       154.06,
       154.8,
-      154.91
+      154.91,
+      155.28
     ],
     "NVDL": [
       160.85,
@@ -397,7 +453,8 @@
       161.98,
       162.19,
       162.22,
-      162.23
+      162.23,
+      162.27
     ],
     "NVDS": [
       168.39,
@@ -405,24 +462,25 @@
       169.25,
       169.4,
       169.9,
-      170.12
+      170.12,
+      169.77
     ]
   },
   "prices": {
-    "233160": 183.71,
-    "233740": 177.3,
-    "520057": 197.78,
-    "530107": 190.51,
-    "SOXX": 101.83,
-    "SMH": 108.85,
-    "USD": 117.44,
-    "SSG": 125.54,
-    "SOXL": 133.98,
-    "SOXS": 141.12,
-    "TSLL": 148.29,
-    "TSLQ": 154.91,
-    "NVDL": 162.23,
-    "NVDS": 170.12
+    "233160": 183.67,
+    "233740": 176.85,
+    "520057": 197.54,
+    "530107": 190.48,
+    "SOXX": 102.35,
+    "SMH": 109.21,
+    "USD": 117.76,
+    "SSG": 126.11,
+    "SOXL": 134.57,
+    "SOXS": 141.87,
+    "TSLL": 148.55,
+    "TSLQ": 155.28,
+    "NVDL": 162.27,
+    "NVDS": 169.77
   },
   "pendingRoundClose": null
 }
