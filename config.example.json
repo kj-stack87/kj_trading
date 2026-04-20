@@ -1,0 +1,88 @@
+{
+    "mode":  "paper",
+    "live_trading_enabled":  false,
+    "symbols":  [
+                    "SOXX",
+                    "SMH",
+                    "USD",
+                    "SSG",
+                    "SOXL",
+                    "SOXS",
+                    "TSLL",
+                    "TSLQ",
+                    "NVDL",
+                    "NVDS",
+                    "233740",
+                    "233160",
+                    "530107",
+                    "520057"
+                ],
+    "symbol_names":  {
+                         "SOXX":  "iShares Semiconductor ETF",
+                         "SMH":  "VanEck Semiconductor ETF",
+                         "USD":  "ProShares Ultra Semiconductors 2X",
+                         "SSG":  "ProShares UltraShort Semiconductors -2X",
+                         "SOXL":  "Direxion Daily Semiconductor Bull 3X ETF",
+                         "SOXS":  "Direxion Daily Semiconductor Bear 3X ETF",
+                         "TSLL":  "Direxion Daily TSLA Bull 2X",
+                         "TSLQ":  "AXS TSLA Bear Daily ETF",
+                         "NVDL":  "GraniteShares 2x Long NVDA Daily ETF",
+                         "NVDS":  "AXS 1.25X NVDA Bear Daily ETF",
+                         "233740":  "KODEX 코스닥150레버리지",
+                         "233160":  "TIGER 코스닥150 레버리지",
+                         "530107":  "삼성 인버스 2X 코스닥150 선물 ETN",
+                         "520057":  "미래에셋 인버스 2X 코스닥150 선물 ETN"
+                     },
+    "loop_interval_seconds":  10,
+    "starting_cash":  10000.0,
+    "strategy":  {
+                     "name":  "paired_etf_rotation",
+                     "long_symbol":  "SOXL",
+                     "inverse_symbol":  "SOXS",
+                     "daily_profit_target":  0.10,
+                     "per_trade_take_profit":  0.008,
+                     "switch_loss_threshold":  0.0035,
+                     "daily_stop_loss":  0.03,
+                     "max_daily_trades":  12,
+                     "allocation_steps":  [
+                                              0.35,
+                                              0.50,
+                                              0.70,
+                                              0.90
+                                          ],
+                     "cooldown_after_losses":  3,
+                     "cooldown_cycles":  12,
+                     "short_window":  5,
+                     "long_window":  20,
+                     "rsi_period":  14,
+                     "rsi_buy_below":  35,
+                     "rsi_sell_above":  70,
+                     "macd_fast":  12,
+                     "macd_slow":  26,
+                     "macd_signal":  9
+                 },
+    "risk":  {
+                 "max_position_value":  10000.0,
+                 "max_order_value":  10000.0,
+                 "max_daily_loss":  300.0,
+                 "allow_short_selling":  false,
+                 "emergency_stop_file":  "data/emergency-stop.json"
+             },
+    "market_data":  {
+                        "provider":  "simulated",
+                        "seed_price":  100.0
+                    },
+    "broker":  {
+                   "provider":  "paper"
+               },
+    "dashboard":  {
+                      "enabled":  true,
+                      "port":  8787
+                  },
+    "git_publish":  {
+                        "enabled":  true,
+                        "docs_dir":  "docs",
+                        "interval_seconds":  60,
+                        "commit_and_push":  false
+                    }
+}

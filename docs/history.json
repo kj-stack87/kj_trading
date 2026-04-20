@@ -1,0 +1,22 @@
+{
+  "dates": [
+    "2026-04-20"
+  ],
+  "rows": [
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "fill": {
+        "symbol": "SOXL",
+        "side": "buy",
+        "quantity": 26,
+        "price": 130.42,
+        "reason": "scheduled entry",
+        "cashAfter": 6609.08,
+        "positionAfter": 26,
+        "realizedPnlToday": 0,
+        "filledAt": "2026-04-20T12:04:52.245Z"
+      }
+    }
+  ]
+}

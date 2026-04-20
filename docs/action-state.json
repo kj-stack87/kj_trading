@@ -1,0 +1,60 @@
+{
+  "tick": 2,
+  "randomState": 3562223158,
+  "cash": 6609.08,
+  "positions": {
+    "SOXL": 26
+  },
+  "averageCost": {
+    "SOXL": 130.42
+  },
+  "realizedPnlToday": 0,
+  "startEquity": 10000,
+  "targetReached": false,
+  "nextSymbol": "SOXL",
+  "allocationIndex": 0,
+  "rotationCount": 0,
+  "consecutiveLosses": 0,
+  "cooldownRemaining": 0,
+  "tradeCount": 1,
+  "fills": [
+    {
+      "symbol": "SOXL",
+      "side": "buy",
+      "quantity": 26,
+      "price": 130.42,
+      "reason": "scheduled entry",
+      "cashAfter": 6609.08,
+      "positionAfter": 26,
+      "realizedPnlToday": 0,
+      "filledAt": "2026-04-20T12:04:52.245Z"
+    }
+  ],
+  "exitOrders": [
+    {
+      "id": "SOXL-1776686692245",
+      "symbol": "SOXL",
+      "quantity": 26,
+      "entryPrice": 130.42,
+      "takeProfitPrice": 131.46,
+      "stopLossPrice": 129.96,
+      "createdAt": "2026-04-20T12:04:52.254Z"
+    }
+  ],
+  "prices": {
+    "233160": 183.44,
+    "233740": 176.45,
+    "520057": 198.27,
+    "530107": 190.37,
+    "SOXX": 100.25,
+    "SMH": 107.5,
+    "USD": 115.57,
+    "SSG": 123.56,
+    "SOXL": 131.28,
+    "SOXS": 138.59,
+    "TSLL": 146.19,
+    "TSLQ": 153.19,
+    "NVDL": 161.43,
+    "NVDS": 168.71
+  }
+}

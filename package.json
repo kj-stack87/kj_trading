@@ -1,0 +1,15 @@
+{
+  "name": "trading-agent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "24H paper trading agent starter",
+  "type": "module",
+  "scripts": {
+    "start": "C:\\Progra~1\\nodejs\\node.exe src/main.js",
+    "once": "C:\\Progra~1\\nodejs\\node.exe src/main.js --once",
+    "actions:cycle": "C:\\Progra~1\\nodejs\\node.exe scripts/actions-cycle.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

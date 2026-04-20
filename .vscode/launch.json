@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Trading Agent: run once",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "C:\\Progra~1\\nodejs\\node.exe",
+      "program": "${workspaceFolder}/src/main.js",
+      "console": "integratedTerminal",
+      "args": ["--once"]
+    },
+    {
+      "name": "Trading Agent: 24H loop",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "C:\\Progra~1\\nodejs\\node.exe",
+      "program": "${workspaceFolder}/src/main.js",
+      "console": "integratedTerminal"
+    }
+  ]
+}
