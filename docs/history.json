@@ -11,6 +11,126 @@
         "symbol": "SOXL",
         "side": "buy",
         "quantity": 26,
+        "price": 135.56,
+        "reason": "scheduled entry",
+        "cashAfter": 6609.08,
+        "positionAfter": 26,
+        "realizedPnlToday": 133.64,
+        "filledAt": "2026-04-20T12:49:51.058Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "fill": {
+        "symbol": "SOXL",
+        "side": "sell",
+        "quantity": 26,
+        "price": 135.56,
+        "reason": "adaptive stale profit",
+        "cashAfter": 10133.64,
+        "positionAfter": 0,
+        "realizedPnlToday": 133.64,
+        "filledAt": "2026-04-20T12:49:51.058Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "fill": {
+        "symbol": "SOXL",
+        "side": "buy",
+        "quantity": 26,
+        "price": 134.57,
+        "reason": "scheduled entry",
+        "cashAfter": 6609.08,
+        "positionAfter": 26,
+        "realizedPnlToday": 107.9,
+        "filledAt": "2026-04-20T12:49:50.803Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "fill": {
+        "symbol": "SOXL",
+        "side": "sell",
+        "quantity": 26,
+        "price": 134.57,
+        "reason": "take profit bracket",
+        "cashAfter": 10107.9,
+        "positionAfter": 0,
+        "realizedPnlToday": 107.9,
+        "filledAt": "2026-04-20T12:49:50.803Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "fill": {
+        "symbol": "SOXL",
+        "side": "buy",
+        "quantity": 26,
+        "price": 133.36,
+        "reason": "scheduled entry",
+        "cashAfter": 6609.08,
+        "positionAfter": 26,
+        "realizedPnlToday": 76.44,
+        "filledAt": "2026-04-20T12:49:50.546Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "fill": {
+        "symbol": "SOXL",
+        "side": "sell",
+        "quantity": 26,
+        "price": 133.36,
+        "reason": "take profit bracket",
+        "cashAfter": 10076.44,
+        "positionAfter": 0,
+        "realizedPnlToday": 76.44,
+        "filledAt": "2026-04-20T12:49:50.546Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "fill": {
+        "symbol": "SOXL",
+        "side": "buy",
+        "quantity": 26,
+        "price": 132.1,
+        "reason": "scheduled entry",
+        "cashAfter": 6609.08,
+        "positionAfter": 26,
+        "realizedPnlToday": 43.68,
+        "filledAt": "2026-04-20T12:49:50.214Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "fill": {
+        "symbol": "SOXL",
+        "side": "sell",
+        "quantity": 26,
+        "price": 132.1,
+        "reason": "take profit bracket",
+        "cashAfter": 10043.68,
+        "positionAfter": 0,
+        "realizedPnlToday": 43.68,
+        "filledAt": "2026-04-20T12:49:50.214Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-20",
+      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "fill": {
+        "symbol": "SOXL",
+        "side": "buy",
+        "quantity": 26,
         "price": 130.42,
         "reason": "scheduled entry",
         "cashAfter": 6609.08,

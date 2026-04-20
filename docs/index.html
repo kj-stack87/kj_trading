@@ -30,7 +30,7 @@
     <section class="panel"><h2>&#47784;&#45768;&#53552;&#47553; &#51333;&#47785;</h2><table><thead><tr><th>No.</th><th>&#51333;&#47785;</th><th>&#51333;&#47785;&#47749;</th><th>&#44032;&#44201;</th></tr></thead><tbody id="watchlist"></tbody></table></section>
     <section class="panel"><h2>&#48372;&#50976; &#51333;&#47785;</h2><table><thead><tr><th>&#51333;&#47785;</th><th>&#51333;&#47785;&#47749;</th><th>&#49688;&#47049;</th><th>&#54788;&#51116;&#44032;</th><th>&#49688;&#51061;&#47456;</th></tr></thead><tbody id="positions"></tbody></table></section>
     <section class="panel"><h2>&#50696;&#50557; &#47588;&#46020;</h2><table><thead><tr><th>&#51333;&#47785;</th><th>&#49688;&#47049;</th><th>&#51061;&#51208;&#44032;</th><th>&#49552;&#51208;&#44032;</th></tr></thead><tbody id="orders"></tbody></table></section>
-    <section class="panel"><h2>&#52572;&#44540; &#52404;&#44208;</h2><table><thead><tr><th>No.</th><th>&#51333;&#47785;</th><th>&#44396;&#48516;</th><th>&#49688;&#47049;</th><th>&#44032;&#44201;</th><th>KST &#49884;&#44036;</th></tr></thead><tbody id="fills"></tbody></table></section>
+    <section class="panel"><h2>&#52572;&#44540; &#52404;&#44208;</h2><table><thead><tr><th>No.</th><th>&#51333;&#47785;</th><th>&#44396;&#48516;</th><th>&#49688;&#47049;</th><th>&#44032;&#44201;</th><th>&#51060;&#50976;</th><th>KST &#49884;&#44036;</th></tr></thead><tbody id="fills"></tbody></table></section>
     <section class="panel"><h2>No.&#48324; &#50756;&#47308; &#51060;&#47141;</h2><table><thead><tr><th>No.</th><th>&#44208;&#44284;</th><th>&#49688;&#51061;&#47456;</th><th>&#49552;&#51061;</th><th>&#49884;&#51089; &#54217;&#44032;&#44552;</th><th>&#51333;&#47308; &#54217;&#44032;&#44552;</th><th>KST &#51333;&#47308;</th></tr></thead><tbody id="rounds"></tbody></table></section>
   </main>
   <script>
@@ -38,6 +38,17 @@
     const pct = (v) => ((Number(v ?? 0) * 100).toFixed(2) + "%");
     const kst = (v) => v ? new Intl.DateTimeFormat("ko-KR", { timeZone:"Asia/Seoul", year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false }).format(new Date(v)) : "-";
     const row = (cells) => "<tr>" + cells.map((c) => "<td>" + c + "</td>").join("") + "</tr>";
+    const reason = (v) => ({
+      "scheduled entry": "예약 진입",
+      "take profit bracket": "익절 체결",
+      "stop loss bracket": "손절 회전",
+      "adaptive trailing profit": "고점 이탈 익절",
+      "adaptive quick profit": "빠른 익절",
+      "adaptive stale profit": "지연 방지 익절",
+      "adaptive rotate on relative strength": "상대강도 회전",
+      "account target reached": "목표 달성",
+      "daily stop loss": "손실 중지"
+    }[v] ?? v ?? "-");
     async function load() {
       const status = await fetch("status.json?ts=" + Date.now()).then((r) => r.json());
       document.getElementById("published").textContent = "마지막 업데이트: " + kst(status.publishedAt);
@@ -49,7 +60,7 @@
       document.getElementById("watchlist").innerHTML = (status.quotes ?? []).map((q, i) => row([i + 1, q.symbol, status.symbolNames?.[q.symbol] ?? "-", money(q.price)])).join("") || row(["-", "-", "-", "-"]);
       document.getElementById("positions").innerHTML = (status.account.positions ?? []).map((p) => row([p.symbol, status.symbolNames?.[p.symbol] ?? "-", p.quantity, money(p.marketPrice), pct(p.unrealizedPnlRate)])).join("") || row(["-", "-", "-", "-", "-"]);
       document.getElementById("orders").innerHTML = (status.account.exitOrders ?? []).map((o) => row([o.symbol, o.quantity, money(o.takeProfitPrice), money(o.stopLossPrice)])).join("") || row(["-", "-", "-", "-"]);
-      document.getElementById("fills").innerHTML = [...(status.account.recentFills ?? [])].reverse().map((f, i) => row([i + 1, f.symbol, f.side === "buy" ? "매수" : "매도", f.quantity, money(f.price), kst(f.filledAt)])).join("") || row(["-", "-", "-", "-", "-", "-"]);
+      document.getElementById("fills").innerHTML = [...(status.account.recentFills ?? [])].reverse().map((f, i) => row([i + 1, f.symbol, f.side === "buy" ? "매수" : "매도", f.quantity, money(f.price), reason(f.reason), kst(f.filledAt)])).join("") || row(["-", "-", "-", "-", "-", "-", "-"]);
       document.getElementById("rounds").innerHTML = (status.round?.history ?? []).map((r) => row([r.no, r.result === "target" ? "목표달성" : "손실중지", pct(r.pnlRate), money(r.pnl), money(r.startEquity), money(r.endEquity), kst(r.endedAt)])).join("") || row(["-", "-", "-", "-", "-", "-", "-"]);
     }
     load();

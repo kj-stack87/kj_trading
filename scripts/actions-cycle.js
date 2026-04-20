@@ -56,6 +56,7 @@ function freshState() {
     tradeCount: 0,
     fills: [],
     exitOrders: [],
+    priceHistory: {},
     prices: Object.fromEntries(config.symbols.map((symbol, index) => [symbol, config.market_data.seed_price + index * 7.5]))
   };
 }
@@ -70,6 +71,9 @@ function nextQuotes(state) {
     const noise = nextRandomBetween(state, -0.35, 0.35);
     const price = round2(Math.max(1, current + wave + noise));
     state.prices[symbol] = price;
+    state.priceHistory[symbol] ??= [];
+    state.priceHistory[symbol].push(price);
+    state.priceHistory[symbol] = state.priceHistory[symbol].slice(-12);
     quotes[symbol] = { symbol, price, timestamp: now };
   });
   return quotes;
@@ -107,11 +111,26 @@ function checkExitOrders(state, quotes, fills) {
     const quote = quotes[order.symbol];
     const quantity = state.positions[order.symbol] ?? 0;
     if (!quote || quantity <= 0) continue;
+    order.bestPrice = Math.max(order.bestPrice ?? order.entryPrice, quote.price);
+    const entryPrice = order.entryPrice || state.averageCost[order.symbol] || quote.price;
+    const pnlRate = entryPrice > 0 ? (quote.price - entryPrice) / entryPrice : 0;
+    const holdingCycles = Math.max(0, state.tick - (order.createdTick ?? state.tick));
+    const adaptiveReason = adaptiveExitReason(state, order, quote, pnlRate, holdingCycles);
     if (quote.price >= order.takeProfitPrice) {
       sellSymbol(state, order.symbol, Math.min(quantity, order.quantity), quote.price, fills, "take profit bracket");
       state.allocationIndex = 0;
       state.consecutiveLosses = 0;
       state.nextSymbol = order.symbol;
+    } else if (adaptiveReason) {
+      sellSymbol(state, order.symbol, Math.min(quantity, order.quantity), quote.price, fills, adaptiveReason);
+      if (adaptiveReason.includes("rotate")) {
+        const nextSymbol = order.symbol === config.strategy.long_symbol ? config.strategy.inverse_symbol : config.strategy.long_symbol;
+        prepareNextAfterLoss(state, nextSymbol);
+      } else {
+        state.allocationIndex = 0;
+        state.consecutiveLosses = 0;
+        state.nextSymbol = chooseNextSymbolByMomentum(state);
+      }
     } else if (quote.price <= order.stopLossPrice) {
       sellSymbol(state, order.symbol, Math.min(quantity, order.quantity), quote.price, fills, "stop loss bracket");
       const nextSymbol = order.symbol === config.strategy.long_symbol ? config.strategy.inverse_symbol : config.strategy.long_symbol;
@@ -163,6 +182,8 @@ function placeExitBracket(state, symbol, quantity, entryPrice) {
     symbol,
     quantity,
     entryPrice: round2(entryPrice),
+    createdTick: state.tick,
+    bestPrice: round2(entryPrice),
     takeProfitPrice: round2(entryPrice * (1 + config.strategy.per_trade_take_profit)),
     stopLossPrice: round2(entryPrice * (1 - config.strategy.switch_loss_threshold)),
     createdAt: new Date().toISOString()
@@ -180,11 +201,56 @@ function prepareNextAfterLoss(state, nextSymbol) {
   }
 }
 
+function adaptiveExitReason(state, order, quote, pnlRate, holdingCycles) {
+  const adaptive = config.strategy.adaptive_exit;
+  if (!adaptive?.enabled) return null;
+
+  const symbolMomentum = recentMomentum(state, order.symbol);
+  const oppositeSymbol = order.symbol === config.strategy.long_symbol ? config.strategy.inverse_symbol : config.strategy.long_symbol;
+  const oppositeMomentum = recentMomentum(state, oppositeSymbol);
+  const bestPrice = order.bestPrice ?? quote.price;
+  const pullbackRate = bestPrice > 0 ? (bestPrice - quote.price) / bestPrice : 0;
+
+  if (pnlRate >= adaptive.trailing_profit_start && pullbackRate >= adaptive.trailing_pullback) {
+    return "adaptive trailing profit";
+  }
+  if (pnlRate >= adaptive.quick_profit_threshold && symbolMomentum < 0) {
+    return "adaptive quick profit";
+  }
+  if (holdingCycles >= adaptive.stale_cycles && pnlRate >= adaptive.stale_profit_threshold) {
+    return "adaptive stale profit";
+  }
+  if (oppositeMomentum - symbolMomentum >= adaptive.relative_strength_gap && pnlRate <= adaptive.stale_profit_threshold) {
+    return "adaptive rotate on relative strength";
+  }
+  return null;
+}
+
+function chooseNextSymbolByMomentum(state) {
+  const longSymbol = config.strategy.long_symbol;
+  const inverseSymbol = config.strategy.inverse_symbol;
+  return recentMomentum(state, inverseSymbol) > recentMomentum(state, longSymbol) ? inverseSymbol : longSymbol;
+}
+
+function recentMomentum(state, symbol) {
+  const history = state.priceHistory?.[symbol] ?? [];
+  if (history.length < 2) return 0;
+  const first = history[Math.max(0, history.length - 4)];
+  const last = history[history.length - 1];
+  return first > 0 ? (last - first) / first : 0;
+}
+
 function ensureRoundState(state) {
   state.roundNo ??= 1;
   state.roundStartedAt ??= new Date().toISOString();
   state.roundHistory ??= [];
   state.pendingRoundClose ??= null;
+  state.priceHistory ??= {};
+  for (const symbol of config.symbols) state.priceHistory[symbol] ??= [];
+  for (const order of state.exitOrders ?? []) {
+    order.createdTick ??= state.tick;
+    order.bestPrice ??= order.entryPrice;
+  }
 }
 
 function completeRoundIfNeeded(state, quotes) {
@@ -247,6 +313,7 @@ function buildStatus(state, quotes) {
       currentAllocationFraction: allocationFraction(state),
       perTradeTakeProfit: config.strategy.per_trade_take_profit,
       switchLossThreshold: config.strategy.switch_loss_threshold,
+      adaptiveExit: config.strategy.adaptive_exit,
       consecutiveLosses: state.consecutiveLosses,
       cooldownRemaining: state.cooldownRemaining,
       targetReached: state.targetReached,
@@ -331,7 +398,7 @@ function renderDashboard() {
     <section class="panel"><h2>&#47784;&#45768;&#53552;&#47553; &#51333;&#47785;</h2><table><thead><tr><th>No.</th><th>&#51333;&#47785;</th><th>&#51333;&#47785;&#47749;</th><th>&#44032;&#44201;</th></tr></thead><tbody id="watchlist"></tbody></table></section>
     <section class="panel"><h2>&#48372;&#50976; &#51333;&#47785;</h2><table><thead><tr><th>&#51333;&#47785;</th><th>&#51333;&#47785;&#47749;</th><th>&#49688;&#47049;</th><th>&#54788;&#51116;&#44032;</th><th>&#49688;&#51061;&#47456;</th></tr></thead><tbody id="positions"></tbody></table></section>
     <section class="panel"><h2>&#50696;&#50557; &#47588;&#46020;</h2><table><thead><tr><th>&#51333;&#47785;</th><th>&#49688;&#47049;</th><th>&#51061;&#51208;&#44032;</th><th>&#49552;&#51208;&#44032;</th></tr></thead><tbody id="orders"></tbody></table></section>
-    <section class="panel"><h2>&#52572;&#44540; &#52404;&#44208;</h2><table><thead><tr><th>No.</th><th>&#51333;&#47785;</th><th>&#44396;&#48516;</th><th>&#49688;&#47049;</th><th>&#44032;&#44201;</th><th>KST &#49884;&#44036;</th></tr></thead><tbody id="fills"></tbody></table></section>
+    <section class="panel"><h2>&#52572;&#44540; &#52404;&#44208;</h2><table><thead><tr><th>No.</th><th>&#51333;&#47785;</th><th>&#44396;&#48516;</th><th>&#49688;&#47049;</th><th>&#44032;&#44201;</th><th>&#51060;&#50976;</th><th>KST &#49884;&#44036;</th></tr></thead><tbody id="fills"></tbody></table></section>
     <section class="panel"><h2>No.&#48324; &#50756;&#47308; &#51060;&#47141;</h2><table><thead><tr><th>No.</th><th>&#44208;&#44284;</th><th>&#49688;&#51061;&#47456;</th><th>&#49552;&#51061;</th><th>&#49884;&#51089; &#54217;&#44032;&#44552;</th><th>&#51333;&#47308; &#54217;&#44032;&#44552;</th><th>KST &#51333;&#47308;</th></tr></thead><tbody id="rounds"></tbody></table></section>
   </main>
   <script>
@@ -339,6 +406,17 @@ function renderDashboard() {
     const pct = (v) => ((Number(v ?? 0) * 100).toFixed(2) + "%");
     const kst = (v) => v ? new Intl.DateTimeFormat("ko-KR", { timeZone:"Asia/Seoul", year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false }).format(new Date(v)) : "-";
     const row = (cells) => "<tr>" + cells.map((c) => "<td>" + c + "</td>").join("") + "</tr>";
+    const reason = (v) => ({
+      "scheduled entry": "예약 진입",
+      "take profit bracket": "익절 체결",
+      "stop loss bracket": "손절 회전",
+      "adaptive trailing profit": "고점 이탈 익절",
+      "adaptive quick profit": "빠른 익절",
+      "adaptive stale profit": "지연 방지 익절",
+      "adaptive rotate on relative strength": "상대강도 회전",
+      "account target reached": "목표 달성",
+      "daily stop loss": "손실 중지"
+    }[v] ?? v ?? "-");
     async function load() {
       const status = await fetch("status.json?ts=" + Date.now()).then((r) => r.json());
       document.getElementById("published").textContent = "마지막 업데이트: " + kst(status.publishedAt);
@@ -350,7 +428,7 @@ function renderDashboard() {
       document.getElementById("watchlist").innerHTML = (status.quotes ?? []).map((q, i) => row([i + 1, q.symbol, status.symbolNames?.[q.symbol] ?? "-", money(q.price)])).join("") || row(["-", "-", "-", "-"]);
       document.getElementById("positions").innerHTML = (status.account.positions ?? []).map((p) => row([p.symbol, status.symbolNames?.[p.symbol] ?? "-", p.quantity, money(p.marketPrice), pct(p.unrealizedPnlRate)])).join("") || row(["-", "-", "-", "-", "-"]);
       document.getElementById("orders").innerHTML = (status.account.exitOrders ?? []).map((o) => row([o.symbol, o.quantity, money(o.takeProfitPrice), money(o.stopLossPrice)])).join("") || row(["-", "-", "-", "-"]);
-      document.getElementById("fills").innerHTML = [...(status.account.recentFills ?? [])].reverse().map((f, i) => row([i + 1, f.symbol, f.side === "buy" ? "매수" : "매도", f.quantity, money(f.price), kst(f.filledAt)])).join("") || row(["-", "-", "-", "-", "-", "-"]);
+      document.getElementById("fills").innerHTML = [...(status.account.recentFills ?? [])].reverse().map((f, i) => row([i + 1, f.symbol, f.side === "buy" ? "매수" : "매도", f.quantity, money(f.price), reason(f.reason), kst(f.filledAt)])).join("") || row(["-", "-", "-", "-", "-", "-", "-"]);
       document.getElementById("rounds").innerHTML = (status.round?.history ?? []).map((r) => row([r.no, r.result === "target" ? "목표달성" : "손실중지", pct(r.pnlRate), money(r.pnl), money(r.startEquity), money(r.endEquity), kst(r.endedAt)])).join("") || row(["-", "-", "-", "-", "-", "-", "-"]);
     }
     load();
