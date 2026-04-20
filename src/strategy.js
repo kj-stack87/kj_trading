@@ -14,6 +14,9 @@ export class PairedEtfRotationStrategy {
     this.consecutiveLosses = 0;
     this.cooldownRemaining = 0;
     this.nextSymbol = config.longSymbol;
+    this.roundNo = 1;
+    this.roundStartedAt = new Date().toISOString();
+    this.roundHistory = [];
   }
 
   onQuotes(quotes, cash, positions) {
@@ -52,8 +55,8 @@ export class PairedEtfRotationStrategy {
     const accountPnlRate = (equity - this.startEquity) / this.startEquity;
 
     if (equity >= targetEquity) {
-      this.targetReached = true;
       this.tradeCount += 1;
+      this.closeRound("target", "10% target reached", equity);
       return [{
         symbol: currentSymbol,
         side: Side.SELL,
@@ -63,8 +66,8 @@ export class PairedEtfRotationStrategy {
     }
 
     if (equity <= dailyStopEquity) {
-      this.targetReached = true;
       this.tradeCount += 1;
+      this.closeRound("stop_loss", "daily stop loss reached", equity);
       return [{
         symbol: currentSymbol,
         side: Side.SELL,
@@ -158,6 +161,9 @@ export class PairedEtfRotationStrategy {
 
     return {
       strategyName: "paired_etf_rotation",
+      roundNo: this.roundNo,
+      roundStartedAt: this.roundStartedAt,
+      roundHistory: this.roundHistory,
       startEquity: this.startEquity,
       currentEquity: this.currentEquity,
       targetEquity,
@@ -181,6 +187,41 @@ export class PairedEtfRotationStrategy {
   setDailyProfitTarget(target) {
     this.config.dailyProfitTarget = target;
     this.targetReached = false;
+  }
+
+  closeRound(result, reason, equity) {
+    const startEquity = this.startEquity ?? equity;
+    const pnl = equity - startEquity;
+    this.roundHistory.unshift({
+      no: this.roundNo,
+      result,
+      reason,
+      startedAt: this.roundStartedAt,
+      endedAt: new Date().toISOString(),
+      startEquity: round2(startEquity),
+      endEquity: round2(equity),
+      pnl: round2(pnl),
+      pnlRate: startEquity > 0 ? round4(pnl / startEquity) : 0,
+      tradeCount: this.tradeCount,
+      rotationCount: this.rotationCount
+    });
+    this.roundHistory = this.roundHistory.slice(0, 100);
+    this.resetForNextRound(equity);
+  }
+
+  resetForNextRound(equity) {
+    this.roundNo += 1;
+    this.roundStartedAt = new Date().toISOString();
+    this.startEquity = equity;
+    this.currentEquity = equity;
+    this.entry = null;
+    this.targetReached = false;
+    this.nextSymbol = this.config.longSymbol;
+    this.allocationIndex = 0;
+    this.rotationCount = 0;
+    this.consecutiveLosses = 0;
+    this.cooldownRemaining = 0;
+    this.tradeCount = 0;
   }
 }
 
@@ -285,6 +326,14 @@ function estimateEquity(cash, positions, quotes) {
 
 function average(values) {
   return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
+function round2(value) {
+  return Math.round(value * 100) / 100;
+}
+
+function round4(value) {
+  return Math.round(value * 10000) / 10000;
 }
 
 function calculateRsi(prices, period) {

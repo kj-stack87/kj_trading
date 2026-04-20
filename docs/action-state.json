@@ -1,14 +1,14 @@
 {
-  "tick": 2,
-  "randomState": 3562223158,
+  "tick": 3,
+  "randomState": 1931673780,
   "cash": 6609.08,
   "positions": {
     "SOXL": 26
   },
   "averageCost": {
-    "SOXL": 130.42
+    "SOXL": 132.1
   },
-  "realizedPnlToday": 0,
+  "realizedPnlToday": 43.68000000000018,
   "startEquity": 10000,
   "targetReached": false,
   "nextSymbol": "SOXL",
@@ -16,8 +16,30 @@
   "rotationCount": 0,
   "consecutiveLosses": 0,
   "cooldownRemaining": 0,
-  "tradeCount": 1,
+  "tradeCount": 3,
   "fills": [
+    {
+      "symbol": "SOXL",
+      "side": "buy",
+      "quantity": 26,
+      "price": 132.1,
+      "reason": "scheduled entry",
+      "cashAfter": 6609.08,
+      "positionAfter": 26,
+      "realizedPnlToday": 43.68,
+      "filledAt": "2026-04-20T12:22:34.826Z"
+    },
+    {
+      "symbol": "SOXL",
+      "side": "sell",
+      "quantity": 26,
+      "price": 132.1,
+      "reason": "take profit bracket",
+      "cashAfter": 10043.68,
+      "positionAfter": 0,
+      "realizedPnlToday": 43.68,
+      "filledAt": "2026-04-20T12:22:34.826Z"
+    },
     {
       "symbol": "SOXL",
       "side": "buy",
@@ -32,29 +54,33 @@
   ],
   "exitOrders": [
     {
-      "id": "SOXL-1776686692245",
+      "id": "SOXL-1776687754826",
       "symbol": "SOXL",
       "quantity": 26,
-      "entryPrice": 130.42,
-      "takeProfitPrice": 131.46,
-      "stopLossPrice": 129.96,
-      "createdAt": "2026-04-20T12:04:52.254Z"
+      "entryPrice": 132.1,
+      "takeProfitPrice": 133.16,
+      "stopLossPrice": 131.64,
+      "createdAt": "2026-04-20T12:22:34.826Z"
     }
   ],
   "prices": {
-    "233160": 183.44,
-    "233740": 176.45,
-    "520057": 198.27,
-    "530107": 190.37,
-    "SOXX": 100.25,
-    "SMH": 107.5,
-    "USD": 115.57,
-    "SSG": 123.56,
-    "SOXL": 131.28,
-    "SOXS": 138.59,
-    "TSLL": 146.19,
-    "TSLQ": 153.19,
-    "NVDL": 161.43,
-    "NVDS": 168.71
-  }
+    "233160": 183.79,
+    "233740": 176.91,
+    "520057": 198.2,
+    "530107": 190.8,
+    "SOXX": 100.57,
+    "SMH": 107.62,
+    "USD": 115.74,
+    "SSG": 124.15,
+    "SOXL": 132.1,
+    "SOXS": 139.43,
+    "TSLL": 146.9,
+    "TSLQ": 153.65,
+    "NVDL": 161.98,
+    "NVDS": 169.25
+  },
+  "roundNo": 1,
+  "roundStartedAt": "2026-04-20T12:22:34.824Z",
+  "roundHistory": [],
+  "pendingRoundClose": null
 }

@@ -109,6 +109,7 @@ export class TradingAgent {
   }
 
   getStatus() {
+    const strategyStatus = typeof this.strategy.getStatus === "function" ? this.strategy.getStatus() : null;
     return {
       mode: this.config.mode,
       liveTradingEnabled: this.config.liveTradingEnabled,
@@ -116,7 +117,12 @@ export class TradingAgent {
       lastCycleAt: this.lastCycleAt,
       lastError: this.lastError,
       symbolNames: this.config.symbolNames,
-      strategyStatus: typeof this.strategy.getStatus === "function" ? this.strategy.getStatus() : null,
+      strategyStatus,
+      round: strategyStatus ? {
+        no: strategyStatus.roundNo,
+        startedAt: strategyStatus.roundStartedAt,
+        history: strategyStatus.roundHistory ?? []
+      } : null,
       strategyConfig: {
         dailyProfitTarget: this.config.strategy.dailyProfitTarget
       },

@@ -131,6 +131,7 @@ function renderDashboardHtml() {
       <div class="panel"><div class="metric">&#54788;&#44552;</div><div class="value" id="cash">-</div></div>
       <div class="panel"><div class="metric">&#50724;&#45720; &#49892;&#54788;&#49552;&#51061;</div><div class="value" id="pnl">-</div></div>
       <div class="panel"><div class="metric">&#49345;&#53468;</div><div class="value"><span id="status" class="status">-</span></div></div>
+      <div class="panel"><div class="metric">&#54788;&#51116; No.</div><div class="value" id="roundNo">-</div></div>
       <div class="panel"><div class="metric">&#44228;&#51340; &#49688;&#51061;&#47456;</div><div class="value" id="accountRate">-</div></div>
       <div class="panel"><div class="metric" id="targetLabel">&#47785;&#54364; &#51652;&#54665;&#47456;</div><div class="value" id="targetProgress">-</div></div>
       <div class="panel"><div class="metric">&#54788;&#51116; &#53804;&#51077;&#48708;&#51473;</div><div class="value" id="allocation">-</div></div>
@@ -147,6 +148,7 @@ function renderDashboardHtml() {
     <section class="panel section"><h2>&#50696;&#50557; &#47588;&#46020; &#51452;&#47928;</h2><table><thead><tr><th>&#51333;&#47785;</th><th>&#51333;&#47785;&#47749;</th><th>&#49688;&#47049;</th><th>&#51652;&#51077;&#44032;</th><th>&#51061;&#51208;&#44032;</th><th>&#49552;&#51208;&#44032;</th><th>KST &#49884;&#44036;</th></tr></thead><tbody id="exitOrders"></tbody></table></section>
     <section class="panel section"><h2>&#52572;&#44540; &#47588;&#47588; &#45236;&#50669;</h2><table><thead><tr><th>&#47588;&#47588; &#45236;&#50857;</th><th>&#51333;&#47785;</th><th>&#51333;&#47785;&#47749;</th><th>&#44396;&#48516;</th><th>&#49688;&#47049;</th><th>&#44032;&#44201;</th><th>KST &#49884;&#44036;</th></tr></thead><tbody id="fills"></tbody></table></section>
     <section class="panel section"><h2>&#45216;&#51676;&#48324; &#47588;&#47588; &#44592;&#47197;</h2><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;"><select id="historyDate"></select><button class="resume" onclick="loadHistory()">&#51312;&#54924;</button></div><table><thead><tr><th>KST &#45216;&#51676;</th><th>&#47588;&#47588; &#45236;&#50857;</th><th>&#51333;&#47785;&#47749;</th><th>&#49688;&#47049;</th><th>&#44032;&#44201;</th><th>&#54788;&#44552;</th><th>KST &#49884;&#44036;</th></tr></thead><tbody id="history"></tbody></table></section>
+    <section class="panel section"><h2>No.&#48324; &#50756;&#47308; &#51060;&#47141;</h2><table><thead><tr><th>No.</th><th>&#44208;&#44284;</th><th>&#49688;&#51061;&#47456;</th><th>&#49552;&#51061;</th><th>&#49884;&#51089; &#54217;&#44032;&#44552;</th><th>&#51333;&#47308; &#54217;&#44032;&#44552;</th><th>KST &#51333;&#47308;</th></tr></thead><tbody id="rounds"></tbody></table></section>
     <section class="panel section"><h2>&#44144;&#51208;&#46108; &#51452;&#47928;</h2><table><thead><tr><th>&#51333;&#47785;</th><th>&#44396;&#48516;</th><th>&#49324;&#50976;</th><th>&#49884;&#44036;</th></tr></thead><tbody id="rejections"></tbody></table></section>
   </main>
   <script>
@@ -158,6 +160,7 @@ function renderDashboardHtml() {
       document.getElementById("pnl").textContent = money(status.account.realizedPnlToday);
       const strategy = status.strategyStatus ?? {};
       const targetPct = Number(status.strategyConfig?.dailyProfitTarget ?? 0) * 100;
+      document.getElementById("roundNo").textContent = status.round?.no ?? "-";
       document.getElementById("targetLabel").textContent = targetPct.toFixed(0) + "% \ubaa9\ud45c \uc9c4\ud589\ub960";
       document.getElementById("accountRate").innerHTML = percent(strategy.accountPnlRate ?? 0);
       document.getElementById("targetProgress").textContent = ((Number(strategy.progressRate ?? 0) * 100).toFixed(0)) + "%";
@@ -176,6 +179,7 @@ function renderDashboardHtml() {
       renderRows("exitOrders", status.account.exitOrders ?? [], (o) => [o.symbol, nameOf(status, o.symbol), o.quantity + "\uc8fc", money(o.entryPrice), money(o.takeProfitPrice), money(o.stopLossPrice), kst(o.createdAt)]);
       renderRows("fills", status.account.recentFills, (f) => [tradeText(f), f.symbol, nameOf(status, f.symbol), tag(f.side), f.quantity + "\uc8fc", money(f.price), kst(f.filledAt)]);
       renderRows("rejections", status.rejections, (r) => [r.signal.symbol, tag(r.signal.side), translateReason(r.reason), kst(r.createdAt)]);
+      renderRows("rounds", status.round?.history ?? [], (r) => [r.no, r.result === "target" ? "\ubaa9\ud45c\ub2ec\uc131" : "\uc190\uc2e4\uc911\uc9c0", percent(r.pnlRate), money(r.pnl), money(r.startEquity), money(r.endEquity), kst(r.endedAt)]);
       await refreshHistoryDates();
     }
     function renderRows(id, rows, mapper) {

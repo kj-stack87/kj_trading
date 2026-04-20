@@ -12,11 +12,13 @@ const config = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8"));
 fs.mkdirSync(DOCS_DIR, { recursive: true });
 
 const state = loadState();
+ensureRoundState(state);
 const quotes = nextQuotes(state);
 const fills = [];
 
 checkExitOrders(state, quotes, fills);
 runStrategyCycle(state, quotes, fills);
+completeRoundIfNeeded(state, quotes);
 
 const status = buildStatus(state, quotes);
 const history = buildHistory(state);
@@ -41,6 +43,9 @@ function loadState() {
     averageCost: {},
     realizedPnlToday: 0,
     startEquity: null,
+    roundNo: 1,
+    roundStartedAt: new Date().toISOString(),
+    roundHistory: [],
     targetReached: false,
     nextSymbol: config.strategy.long_symbol,
     allocationIndex: 0,
@@ -81,13 +86,21 @@ function runStrategyCycle(state, quotes, fills) {
 
   if (equity >= targetEquity) {
     sellAll(state, quotes, fills, "account target reached");
-    state.targetReached = true;
+    state.pendingRoundClose = {
+      result: "target",
+      reason: "10% target reached",
+      closedAt: new Date().toISOString()
+    };
     return;
   }
 
   if (equity <= dailyStopEquity) {
     sellAll(state, quotes, fills, "daily stop loss");
-    state.targetReached = true;
+    state.pendingRoundClose = {
+      result: "stop_loss",
+      reason: "daily stop loss reached",
+      closedAt: new Date().toISOString()
+    };
     return;
   }
 
@@ -191,6 +204,11 @@ function buildStatus(state, quotes) {
   return {
     mode: "github-actions-paper",
     publishedAt: new Date().toISOString(),
+    round: {
+      no: state.roundNo,
+      startedAt: state.roundStartedAt,
+      history: state.roundHistory ?? []
+    },
     symbolNames: config.symbol_names,
     quotes: Object.values(quotes),
     strategyConfig: { dailyProfitTarget: config.strategy.daily_profit_target },
@@ -200,6 +218,7 @@ function buildStatus(state, quotes) {
       currentEquity: equity,
       accountPnlRate,
       progressRate,
+      roundNo: state.roundNo,
       rotationCount: state.rotationCount,
       allocationIndex: state.allocationIndex,
       currentAllocationFraction: allocationFraction(state),
@@ -238,12 +257,60 @@ function buildStatus(state, quotes) {
 function buildHistory(state) {
   return {
     dates: [...new Set(state.fills.map((fill) => toKstDate(fill.filledAt)))],
+    rounds: state.roundHistory ?? [],
     rows: state.fills.map((fill) => ({
       kstDate: toKstDate(fill.filledAt),
       symbolName: config.symbol_names?.[fill.symbol] ?? "-",
       fill
     }))
   };
+}
+
+function ensureRoundState(state) {
+  state.roundNo ??= 1;
+  state.roundStartedAt ??= new Date().toISOString();
+  state.roundHistory ??= [];
+  state.pendingRoundClose ??= null;
+}
+
+function completeRoundIfNeeded(state, quotes) {
+  if (!state.pendingRoundClose) return;
+  const endEquity = estimateEquity(state, quotes);
+  const startEquity = state.startEquity ?? endEquity;
+  const pnl = endEquity - startEquity;
+  const pnlRate = startEquity > 0 ? pnl / startEquity : 0;
+
+  state.roundHistory.unshift({
+    no: state.roundNo,
+    result: state.pendingRoundClose.result,
+    reason: state.pendingRoundClose.reason,
+    startedAt: state.roundStartedAt,
+    endedAt: state.pendingRoundClose.closedAt,
+    startEquity: round2(startEquity),
+    endEquity: round2(endEquity),
+    pnl: round2(pnl),
+    pnlRate: round4(pnlRate),
+    tradeCount: state.tradeCount,
+    rotationCount: state.rotationCount
+  });
+  state.roundHistory = state.roundHistory.slice(0, 100);
+
+  resetForNextRound(state, endEquity);
+}
+
+function resetForNextRound(state, equity) {
+  state.roundNo += 1;
+  state.roundStartedAt = new Date().toISOString();
+  state.startEquity = equity;
+  state.targetReached = false;
+  state.nextSymbol = config.strategy.long_symbol;
+  state.allocationIndex = 0;
+  state.rotationCount = 0;
+  state.consecutiveLosses = 0;
+  state.cooldownRemaining = 0;
+  state.tradeCount = 0;
+  state.exitOrders = [];
+  state.pendingRoundClose = null;
 }
 
 function addFill(state, fills, fill) {
@@ -330,6 +397,7 @@ function renderDashboard() {
   <header><h1>자동매매 아바타 스냅샷</h1><div id="published">불러오는 중...</div></header>
   <main>
     <div class="grid">
+      <div class="panel"><div class="metric">현재 No.</div><div class="value" id="roundNo">-</div></div>
       <div class="panel"><div class="metric">평가금</div><div class="value" id="equity">-</div></div>
       <div class="panel"><div class="metric">현금</div><div class="value" id="cash">-</div></div>
       <div class="panel"><div class="metric">계좌 수익률</div><div class="value" id="rate">-</div></div>
@@ -338,6 +406,7 @@ function renderDashboard() {
     <section class="panel"><h2>보유 종목</h2><table><thead><tr><th>종목</th><th>종목명</th><th>수량</th><th>현재가</th><th>수익률</th></tr></thead><tbody id="positions"></tbody></table></section>
     <section class="panel"><h2>예약 매도</h2><table><thead><tr><th>종목</th><th>수량</th><th>익절가</th><th>손절가</th></tr></thead><tbody id="orders"></tbody></table></section>
     <section class="panel"><h2>최근 체결</h2><table><thead><tr><th>종목</th><th>구분</th><th>수량</th><th>가격</th><th>KST 시간</th></tr></thead><tbody id="fills"></tbody></table></section>
+    <section class="panel"><h2>No.별 완료 이력</h2><table><thead><tr><th>No.</th><th>결과</th><th>수익률</th><th>손익</th><th>시작 평가금</th><th>종료 평가금</th><th>KST 종료</th></tr></thead><tbody id="rounds"></tbody></table></section>
   </main>
   <script>
     const money = (v) => new Intl.NumberFormat("en-US", { style:"currency", currency:"USD" }).format(v ?? 0);
@@ -347,6 +416,7 @@ function renderDashboard() {
     async function load() {
       const status = await fetch("status.json?ts=" + Date.now()).then((r) => r.json());
       document.getElementById("published").textContent = "마지막 업데이트: " + kst(status.publishedAt);
+      document.getElementById("roundNo").textContent = status.round?.no ?? "-";
       document.getElementById("equity").textContent = money(status.account.equity);
       document.getElementById("cash").textContent = money(status.account.cash);
       document.getElementById("rate").textContent = pct(status.strategyStatus?.accountPnlRate);
@@ -354,6 +424,7 @@ function renderDashboard() {
       document.getElementById("positions").innerHTML = (status.account.positions ?? []).map((p) => row([p.symbol, status.symbolNames?.[p.symbol] ?? "-", p.quantity, money(p.marketPrice), pct(p.unrealizedPnlRate)])).join("") || row(["-", "-", "-", "-", "-"]);
       document.getElementById("orders").innerHTML = (status.account.exitOrders ?? []).map((o) => row([o.symbol, o.quantity, money(o.takeProfitPrice), money(o.stopLossPrice)])).join("") || row(["-", "-", "-", "-"]);
       document.getElementById("fills").innerHTML = (status.account.recentFills ?? []).map((f) => row([f.symbol, f.side === "buy" ? "매수" : "매도", f.quantity, money(f.price), kst(f.filledAt)])).join("") || row(["-", "-", "-", "-", "-"]);
+      document.getElementById("rounds").innerHTML = (status.round?.history ?? []).map((r) => row([r.no, r.result === "target" ? "목표달성" : "손실중지", pct(r.pnlRate), money(r.pnl), money(r.startEquity), money(r.endEquity), kst(r.endedAt)])).join("") || row(["-", "-", "-", "-", "-", "-", "-"]);
     }
     load();
     setInterval(load, 30000);
