@@ -1,6 +1,6 @@
 {
   "mode": "github-actions-paper",
-  "publishedAt": "2026-04-21T15:54:37.849Z",
+  "publishedAt": "2026-04-21T19:54:30.210Z",
   "round": {
     "no": 1,
     "startedAt": "2026-04-20T13:09:59.819Z",
@@ -25,73 +25,73 @@
   "quotes": [
     {
       "symbol": "233160",
-      "price": 180.3,
-      "timestamp": "2026-04-21T15:54:37.847Z"
+      "price": 179.9,
+      "timestamp": "2026-04-21T19:54:30.209Z"
     },
     {
       "symbol": "233740",
-      "price": 173.83,
-      "timestamp": "2026-04-21T15:54:37.847Z"
+      "price": 173.34,
+      "timestamp": "2026-04-21T19:54:30.209Z"
     },
     {
       "symbol": "520057",
-      "price": 193.93,
-      "timestamp": "2026-04-21T15:54:37.847Z"
+      "price": 193.31,
+      "timestamp": "2026-04-21T19:54:30.209Z"
     },
     {
       "symbol": "530107",
-      "price": 186.96,
-      "timestamp": "2026-04-21T15:54:37.847Z"
+      "price": 186.49,
+      "timestamp": "2026-04-21T19:54:30.209Z"
     },
     {
       "symbol": "SOXX",
-      "price": 105.78,
-      "timestamp": "2026-04-21T15:54:37.847Z"
+      "price": 105.93,
+      "timestamp": "2026-04-21T19:54:30.209Z"
     },
     {
       "symbol": "SMH",
-      "price": 111.57,
-      "timestamp": "2026-04-21T15:54:37.847Z"
+      "price": 111.99,
+      "timestamp": "2026-04-21T19:54:30.209Z"
     },
     {
       "symbol": "USD",
-      "price": 119.92,
-      "timestamp": "2026-04-21T15:54:37.847Z"
+      "price": 120,
+      "timestamp": "2026-04-21T19:54:30.209Z"
     },
     {
       "symbol": "SSG",
-      "price": 127.49,
-      "timestamp": "2026-04-21T15:54:37.847Z"
+      "price": 127.41,
+      "timestamp": "2026-04-21T19:54:30.209Z"
     },
     {
       "symbol": "SOXL",
-      "price": 136.11,
-      "timestamp": "2026-04-21T15:54:37.847Z"
+      "price": 135.75,
+      "timestamp": "2026-04-21T19:54:30.209Z"
     },
     {
       "symbol": "SOXS",
-      "price": 142.56,
-      "timestamp": "2026-04-21T15:54:37.847Z"
+      "price": 142.33,
+      "timestamp": "2026-04-21T19:54:30.209Z"
     },
     {
       "symbol": "TSLL",
-      "price": 148.08,
-      "timestamp": "2026-04-21T15:54:37.847Z"
+      "price": 147.47,
+      "timestamp": "2026-04-21T19:54:30.209Z"
     },
     {
       "symbol": "TSLQ",
-      "price": 154.4,
-      "timestamp": "2026-04-21T15:54:37.847Z"
+      "price": 154.17,
+      "timestamp": "2026-04-21T19:54:30.209Z"
     },
     {
       "symbol": "NVDL",
-      "price": 160.03,
-      "timestamp": "2026-04-21T15:54:37.847Z"
+      "price": 159.73,
+      "timestamp": "2026-04-21T19:54:30.209Z"
     },
     {
       "symbol": "NVDS",
-      "price": 167.05,
-      "timestamp": "2026-04-21T15:54:37.847Z"
+      "price": 166.49,
+      "timestamp": "2026-04-21T19:54:30.209Z"
     }
   ],
   "strategyConfig": {
@@ -100,9 +100,9 @@
   "strategyStatus": {
     "strategyName": "github_actions_rotation",
     "startEquity": 10000,
-    "currentEquity": 10241.080000000002,
-    "accountPnlRate": 0.024108000000000174,
-    "progressRate": 0.6027000000000043,
+    "currentEquity": 10239.720000000001,
+    "accountPnlRate": 0.023972000000000115,
+    "progressRate": 0.5993000000000028,
     "roundNo": 1,
     "rotationCount": 4,
     "allocationIndex": 1,
@@ -130,17 +130,17 @@
   "account": {
     "provider": "github-actions-paper",
     "cash": 8073.75,
-    "equity": 10241.08,
+    "equity": 10239.72,
     "realizedPnlToday": 240.91,
     "positions": [
       {
         "symbol": "SSG",
         "quantity": 17,
         "averageCost": 127.48,
-        "marketPrice": 127.49,
-        "marketValue": 2167.33,
-        "unrealizedPnl": 0.17,
-        "unrealizedPnlRate": 0.0001
+        "marketPrice": 127.41,
+        "marketValue": 2165.97,
+        "unrealizedPnl": -1.19,
+        "unrealizedPnlRate": -0.0005
       }
     ],
     "recentFills": [
