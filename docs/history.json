@@ -7,6 +7,66 @@
   "rows": [
     {
       "kstDate": "2026-04-21",
+      "symbolName": "iShares Semiconductor ETF",
+      "fill": {
+        "symbol": "SOXX",
+        "side": "buy",
+        "quantity": 21,
+        "price": 104.59,
+        "reason": "portfolio entry",
+        "cashAfter": 1536.21,
+        "positionAfter": 21,
+        "realizedPnlToday": 221.26,
+        "filledAt": "2026-04-21T06:13:36.683Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-21",
+      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "fill": {
+        "symbol": "SOXL",
+        "side": "buy",
+        "quantity": 16,
+        "price": 135.9,
+        "reason": "portfolio entry",
+        "cashAfter": 3732.6,
+        "positionAfter": 16,
+        "realizedPnlToday": 221.26,
+        "filledAt": "2026-04-21T06:13:36.683Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-21",
+      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "fill": {
+        "symbol": "SOXL",
+        "side": "sell",
+        "quantity": 16,
+        "price": 135.9,
+        "reason": "adaptive stale profit",
+        "cashAfter": 5907,
+        "positionAfter": 0,
+        "realizedPnlToday": 221.26,
+        "filledAt": "2026-04-21T06:13:36.683Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-21",
+      "symbolName": "ProShares Ultra Semiconductors 2X",
+      "fill": {
+        "symbol": "USD",
+        "side": "sell",
+        "quantity": 18,
+        "price": 119.57,
+        "reason": "adaptive stale profit",
+        "cashAfter": 3732.6,
+        "positionAfter": 0,
+        "realizedPnlToday": 215.82,
+        "filledAt": "2026-04-21T06:13:36.683Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-21",
       "symbolName": "ProShares UltraShort Semiconductors -2X",
       "fill": {
         "symbol": "SSG",
