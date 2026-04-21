@@ -8,6 +8,21 @@
   "rows": [
     {
       "kstDate": "2026-04-22",
+      "symbolName": "ProShares UltraShort Semiconductors -2X",
+      "fill": {
+        "symbol": "SSG",
+        "side": "sell",
+        "quantity": 17,
+        "price": 127.03,
+        "reason": "stop loss bracket",
+        "cashAfter": 10233.26,
+        "positionAfter": 0,
+        "realizedPnlToday": 233.26,
+        "filledAt": "2026-04-21T22:11:13.043Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-22",
       "symbolName": "Direxion Daily Semiconductor Bear 3X ETF",
       "fill": {
         "symbol": "SOXS",
