@@ -1,10 +1,56 @@
 {
   "dates": [
+    "2026-04-22",
     "2026-04-21",
     "2026-04-20"
   ],
   "rounds": [],
   "rows": [
+    {
+      "kstDate": "2026-04-22",
+      "symbolName": "Direxion Daily Semiconductor Bear 3X ETF",
+      "fill": {
+        "symbol": "SOXS",
+        "side": "sell",
+        "quantity": 15,
+        "price": 142.56,
+        "reason": "adaptive rotate on relative strength",
+        "cashAfter": 8073.75,
+        "positionAfter": 0,
+        "realizedPnlToday": 240.91,
+        "filledAt": "2026-04-21T15:54:37.848Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-22",
+      "symbolName": "Direxion Daily Semiconductor Bull 3X ETF",
+      "fill": {
+        "symbol": "SOXL",
+        "side": "sell",
+        "quantity": 16,
+        "price": 136.11,
+        "reason": "adaptive stale profit",
+        "cashAfter": 5935.35,
+        "positionAfter": 0,
+        "realizedPnlToday": 249.61,
+        "filledAt": "2026-04-21T15:54:37.848Z"
+      }
+    },
+    {
+      "kstDate": "2026-04-22",
+      "symbolName": "iShares Semiconductor ETF",
+      "fill": {
+        "symbol": "SOXX",
+        "side": "sell",
+        "quantity": 21,
+        "price": 105.78,
+        "reason": "take profit bracket",
+        "cashAfter": 3757.59,
+        "positionAfter": 0,
+        "realizedPnlToday": 246.25,
+        "filledAt": "2026-04-21T15:54:37.848Z"
+      }
+    },
     {
       "kstDate": "2026-04-21",
       "symbolName": "iShares Semiconductor ETF",

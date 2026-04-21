@@ -1,6 +1,6 @@
 {
   "mode": "github-actions-paper",
-  "publishedAt": "2026-04-21T10:51:43.543Z",
+  "publishedAt": "2026-04-21T15:54:37.849Z",
   "round": {
     "no": 1,
     "startedAt": "2026-04-20T13:09:59.819Z",
@@ -25,73 +25,73 @@
   "quotes": [
     {
       "symbol": "233160",
-      "price": 181.07,
-      "timestamp": "2026-04-21T10:51:43.542Z"
+      "price": 180.3,
+      "timestamp": "2026-04-21T15:54:37.847Z"
     },
     {
       "symbol": "233740",
-      "price": 174.7,
-      "timestamp": "2026-04-21T10:51:43.542Z"
+      "price": 173.83,
+      "timestamp": "2026-04-21T15:54:37.847Z"
     },
     {
       "symbol": "520057",
-      "price": 194.42,
-      "timestamp": "2026-04-21T10:51:43.542Z"
+      "price": 193.93,
+      "timestamp": "2026-04-21T15:54:37.847Z"
     },
     {
       "symbol": "530107",
-      "price": 187.69,
-      "timestamp": "2026-04-21T10:51:43.542Z"
+      "price": 186.96,
+      "timestamp": "2026-04-21T15:54:37.847Z"
     },
     {
       "symbol": "SOXX",
-      "price": 105.16,
-      "timestamp": "2026-04-21T10:51:43.542Z"
+      "price": 105.78,
+      "timestamp": "2026-04-21T15:54:37.847Z"
     },
     {
       "symbol": "SMH",
-      "price": 111.41,
-      "timestamp": "2026-04-21T10:51:43.542Z"
+      "price": 111.57,
+      "timestamp": "2026-04-21T15:54:37.847Z"
     },
     {
       "symbol": "USD",
-      "price": 119.94,
-      "timestamp": "2026-04-21T10:51:43.542Z"
+      "price": 119.92,
+      "timestamp": "2026-04-21T15:54:37.847Z"
     },
     {
       "symbol": "SSG",
-      "price": 127.47,
-      "timestamp": "2026-04-21T10:51:43.542Z"
+      "price": 127.49,
+      "timestamp": "2026-04-21T15:54:37.847Z"
     },
     {
       "symbol": "SOXL",
-      "price": 136.21,
-      "timestamp": "2026-04-21T10:51:43.542Z"
+      "price": 136.11,
+      "timestamp": "2026-04-21T15:54:37.847Z"
     },
     {
       "symbol": "SOXS",
-      "price": 143.15,
-      "timestamp": "2026-04-21T10:51:43.542Z"
+      "price": 142.56,
+      "timestamp": "2026-04-21T15:54:37.847Z"
     },
     {
       "symbol": "TSLL",
-      "price": 148.51,
-      "timestamp": "2026-04-21T10:51:43.542Z"
+      "price": 148.08,
+      "timestamp": "2026-04-21T15:54:37.847Z"
     },
     {
       "symbol": "TSLQ",
-      "price": 154.79,
-      "timestamp": "2026-04-21T10:51:43.542Z"
+      "price": 154.4,
+      "timestamp": "2026-04-21T15:54:37.847Z"
     },
     {
       "symbol": "NVDL",
-      "price": 160.85,
-      "timestamp": "2026-04-21T10:51:43.542Z"
+      "price": 160.03,
+      "timestamp": "2026-04-21T15:54:37.847Z"
     },
     {
       "symbol": "NVDS",
-      "price": 167.87,
-      "timestamp": "2026-04-21T10:51:43.542Z"
+      "price": 167.05,
+      "timestamp": "2026-04-21T15:54:37.847Z"
     }
   ],
   "strategyConfig": {
@@ -100,13 +100,13 @@
   "strategyStatus": {
     "strategyName": "github_actions_rotation",
     "startEquity": 10000,
-    "currentEquity": 10238.170000000002,
-    "accountPnlRate": 0.02381700000000019,
-    "progressRate": 0.5954250000000048,
+    "currentEquity": 10241.080000000002,
+    "accountPnlRate": 0.024108000000000174,
+    "progressRate": 0.6027000000000043,
     "roundNo": 1,
-    "rotationCount": 3,
-    "allocationIndex": 0,
-    "currentAllocationFraction": 0.35,
+    "rotationCount": 4,
+    "allocationIndex": 1,
+    "currentAllocationFraction": 0.5,
     "maxConcurrentPositions": 4,
     "perPositionAllocation": 0.22,
     "activeCandidateSide": "long",
@@ -121,56 +121,62 @@
       "stale_profit_threshold": 0.0015,
       "relative_strength_gap": 0.003
     },
-    "consecutiveLosses": 0,
+    "consecutiveLosses": 1,
     "cooldownRemaining": 0,
     "targetReached": false,
-    "tradeCount": 40,
+    "tradeCount": 43,
     "maxDailyTrades": 40
   },
   "account": {
     "provider": "github-actions-paper",
-    "cash": 1536.21,
-    "equity": 10238.17,
-    "realizedPnlToday": 221.26,
+    "cash": 8073.75,
+    "equity": 10241.08,
+    "realizedPnlToday": 240.91,
     "positions": [
-      {
-        "symbol": "SOXS",
-        "quantity": 15,
-        "averageCost": 143.14,
-        "marketPrice": 143.15,
-        "marketValue": 2147.25,
-        "unrealizedPnl": 0.15,
-        "unrealizedPnlRate": 0.0001
-      },
       {
         "symbol": "SSG",
         "quantity": 17,
         "averageCost": 127.48,
-        "marketPrice": 127.47,
-        "marketValue": 2166.99,
-        "unrealizedPnl": -0.17,
-        "unrealizedPnlRate": -0.0001
-      },
-      {
-        "symbol": "SOXL",
-        "quantity": 16,
-        "averageCost": 135.9,
-        "marketPrice": 136.21,
-        "marketValue": 2179.36,
-        "unrealizedPnl": 4.96,
-        "unrealizedPnlRate": 0.0023
-      },
-      {
-        "symbol": "SOXX",
-        "quantity": 21,
-        "averageCost": 104.59,
-        "marketPrice": 105.16,
-        "marketValue": 2208.36,
-        "unrealizedPnl": 11.97,
-        "unrealizedPnlRate": 0.0054
+        "marketPrice": 127.49,
+        "marketValue": 2167.33,
+        "unrealizedPnl": 0.17,
+        "unrealizedPnlRate": 0.0001
       }
     ],
     "recentFills": [
+      {
+        "symbol": "SOXS",
+        "side": "sell",
+        "quantity": 15,
+        "price": 142.56,
+        "reason": "adaptive rotate on relative strength",
+        "cashAfter": 8073.75,
+        "positionAfter": 0,
+        "realizedPnlToday": 240.91,
+        "filledAt": "2026-04-21T15:54:37.848Z"
+      },
+      {
+        "symbol": "SOXL",
+        "side": "sell",
+        "quantity": 16,
+        "price": 136.11,
+        "reason": "adaptive stale profit",
+        "cashAfter": 5935.35,
+        "positionAfter": 0,
+        "realizedPnlToday": 249.61,
+        "filledAt": "2026-04-21T15:54:37.848Z"
+      },
+      {
+        "symbol": "SOXX",
+        "side": "sell",
+        "quantity": 21,
+        "price": 105.78,
+        "reason": "take profit bracket",
+        "cashAfter": 3757.59,
+        "positionAfter": 0,
+        "realizedPnlToday": 246.25,
+        "filledAt": "2026-04-21T15:54:37.848Z"
+      },
       {
         "symbol": "SOXX",
         "side": "buy",
@@ -614,47 +620,14 @@
     ],
     "exitOrders": [
       {
-        "id": "SOXX-1776752016683",
-        "symbol": "SOXX",
-        "quantity": 21,
-        "entryPrice": 104.59,
-        "createdTick": 11,
-        "bestPrice": 105.16,
-        "takeProfitPrice": 105.43,
-        "stopLossPrice": 104.22,
-        "createdAt": "2026-04-21T06:13:36.683Z"
-      },
-      {
-        "id": "SOXL-1776752016683",
-        "symbol": "SOXL",
-        "quantity": 16,
-        "entryPrice": 135.9,
-        "createdTick": 11,
-        "bestPrice": 136.21,
-        "takeProfitPrice": 136.99,
-        "stopLossPrice": 135.42,
-        "createdAt": "2026-04-21T06:13:36.683Z"
-      },
-      {
         "id": "SSG-1776724207175",
         "symbol": "SSG",
         "quantity": 17,
         "entryPrice": 127.48,
         "createdTick": 10,
-        "bestPrice": 127.48,
+        "bestPrice": 127.49,
         "takeProfitPrice": 128.5,
         "stopLossPrice": 127.03,
-        "createdAt": "2026-04-20T22:30:07.175Z"
-      },
-      {
-        "id": "SOXS-1776724207175",
-        "symbol": "SOXS",
-        "quantity": 15,
-        "entryPrice": 143.14,
-        "createdTick": 10,
-        "bestPrice": 143.15,
-        "takeProfitPrice": 144.29,
-        "stopLossPrice": 142.64,
         "createdAt": "2026-04-20T22:30:07.175Z"
       }
     ]
