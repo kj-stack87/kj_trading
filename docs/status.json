@@ -1,6 +1,6 @@
 {
   "mode": "github-actions-paper",
-  "publishedAt": "2026-06-06T23:36:55.355Z",
+  "publishedAt": "2026-06-07T01:52:14.761Z",
   "round": {
     "no": 1,
     "startedAt": "2026-04-20T13:09:59.819Z",
@@ -25,73 +25,73 @@
   "quotes": [
     {
       "symbol": "233160",
-      "price": 180.45,
-      "timestamp": "2026-06-06T23:36:55.354Z"
+      "price": 180.21,
+      "timestamp": "2026-06-07T01:52:14.760Z"
     },
     {
       "symbol": "233740",
-      "price": 177.29,
-      "timestamp": "2026-06-06T23:36:55.354Z"
+      "price": 176.41,
+      "timestamp": "2026-06-07T01:52:14.760Z"
     },
     {
       "symbol": "520057",
-      "price": 196.7,
-      "timestamp": "2026-06-06T23:36:55.354Z"
+      "price": 196,
+      "timestamp": "2026-06-07T01:52:14.760Z"
     },
     {
       "symbol": "530107",
-      "price": 186.43,
-      "timestamp": "2026-06-06T23:36:55.354Z"
+      "price": 186.21,
+      "timestamp": "2026-06-07T01:52:14.760Z"
     },
     {
       "symbol": "SOXX",
-      "price": 107.7,
-      "timestamp": "2026-06-06T23:36:55.354Z"
+      "price": 107.98,
+      "timestamp": "2026-06-07T01:52:14.760Z"
     },
     {
       "symbol": "SMH",
-      "price": 112.33,
-      "timestamp": "2026-06-06T23:36:55.354Z"
+      "price": 112.47,
+      "timestamp": "2026-06-07T01:52:14.760Z"
     },
     {
       "symbol": "USD",
-      "price": 125.95,
-      "timestamp": "2026-06-06T23:36:55.354Z"
+      "price": 125.66,
+      "timestamp": "2026-06-07T01:52:14.760Z"
     },
     {
       "symbol": "SSG",
-      "price": 123.16,
-      "timestamp": "2026-06-06T23:36:55.354Z"
+      "price": 123.17,
+      "timestamp": "2026-06-07T01:52:14.760Z"
     },
     {
       "symbol": "SOXL",
-      "price": 137.38,
-      "timestamp": "2026-06-06T23:36:55.354Z"
+      "price": 136.87,
+      "timestamp": "2026-06-07T01:52:14.760Z"
     },
     {
       "symbol": "SOXS",
-      "price": 142.4,
-      "timestamp": "2026-06-06T23:36:55.354Z"
+      "price": 141.93,
+      "timestamp": "2026-06-07T01:52:14.760Z"
     },
     {
       "symbol": "TSLL",
-      "price": 145.99,
-      "timestamp": "2026-06-06T23:36:55.354Z"
+      "price": 145.8,
+      "timestamp": "2026-06-07T01:52:14.760Z"
     },
     {
       "symbol": "TSLQ",
-      "price": 156.12,
-      "timestamp": "2026-06-06T23:36:55.354Z"
+      "price": 155.25,
+      "timestamp": "2026-06-07T01:52:14.760Z"
     },
     {
       "symbol": "NVDL",
-      "price": 159.65,
-      "timestamp": "2026-06-06T23:36:55.354Z"
+      "price": 158.81,
+      "timestamp": "2026-06-07T01:52:14.760Z"
     },
     {
       "symbol": "NVDS",
-      "price": 174.27,
-      "timestamp": "2026-06-06T23:36:55.354Z"
+      "price": 173.81,
+      "timestamp": "2026-06-07T01:52:14.760Z"
     }
   ],
   "strategyConfig": {
